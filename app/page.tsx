@@ -5,6 +5,7 @@ import Footer from "./components/footer";
 import Suggestions from "./components/suggestions";
 import Features from "./components/features";
 import FAQ from "./components/faq";
+import Chatbot from "./components/Chatbot";
 
 export default function Home() {
   return (
@@ -53,6 +54,7 @@ export default function Home() {
           Get Started
         </button>
       </div>
+      <Chatbot />
 
       <Suggestions />
       <Features />

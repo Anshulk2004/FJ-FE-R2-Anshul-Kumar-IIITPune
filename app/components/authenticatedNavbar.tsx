@@ -35,22 +35,32 @@ export default function AuthenticatedNavbar() {
         </Link>
 
         <div className="flex items-center gap-6">
-          <button className="text-white hover:text-yellow-400 transition-all font-semibold">
-            Ride
-          </button>
-          <button className="text-white hover:text-yellow-400 transition-all font-semibold">
-            Drive
-          </button>
-          <button className="text-white hover:text-yellow-400 transition-all font-semibold">
-            Sharing
-          </button>
-          <button className="text-white hover:text-yellow-400 transition-all font-semibold">
-            Rentals
-          </button>
-          <button className="text-white hover:text-yellow-400 transition-all font-semibold">
-            Couriers
-          </button>
-        </div>
+      <Link href="/ride">
+        <button className="text-white hover:text-yellow-400 transition-all font-semibold">
+          Ride
+        </button>
+      </Link>
+      <Link href="/drive">
+        <button className="text-white hover:text-yellow-400 transition-all font-semibold">
+          Drive
+        </button>
+      </Link>
+      <Link href="/sharing">
+        <button className="text-white hover:text-yellow-400 transition-all font-semibold">
+          Sharing
+        </button>
+      </Link>
+      <Link href="/rentals">
+        <button className="text-white hover:text-yellow-400 transition-all font-semibold">
+          Rentals
+        </button>
+      </Link>
+      <Link href="/courier">
+        <button className="text-white hover:text-yellow-400 transition-all font-semibold">
+          Couriers
+        </button>
+      </Link>
+    </div>
 
         <div className="flex items-center gap-5">
           <button className="text-white hover:text-gray-300 transition-all">

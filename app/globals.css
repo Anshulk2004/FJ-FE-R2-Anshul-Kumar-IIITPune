@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 
+@import 'leaflet/dist/leaflet.css';
+
+
 
 @layer base {
   :root {
