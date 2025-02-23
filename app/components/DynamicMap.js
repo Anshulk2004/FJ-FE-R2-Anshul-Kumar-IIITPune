@@ -1,4 +1,3 @@
-// components/DynamicMap.js
 import dynamic from 'next/dynamic';
 
 const DynamicMap = dynamic(() => import('./Map'), {

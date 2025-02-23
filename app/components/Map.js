@@ -1,9 +1,7 @@
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet-routing-machine";
-import { useEffect, useState } from "react";
-
-// Import required CSS
+import { useEffect, useState, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 
@@ -18,37 +16,52 @@ const createCustomIcon = (color) => {
   });
 };
 
-const RoutingMachine = ({ pickupCoords, dropoffCoords, setDirections }) => {
+const RoutingMachine = ({ stops, setDirections }) => {
   const map = useMap();
-  const [routeControl, setRouteControl] = useState(null);
+  const routingControlRef = useRef(null);
 
   useEffect(() => {
-    if (routeControl) {
-      map.removeControl(routeControl);
-      setRouteControl(null);
+    // Clear existing route
+    if (routingControlRef.current) {
+      map.removeControl(routingControlRef.current);
+      routingControlRef.current = null;
     }
 
-    if (!pickupCoords || !dropoffCoords) {
+    const validStops = stops.filter(stop => stop.coordinates && stop.address.trim());
+    if (validStops.length < 2) {
       setDirections([]);
       return;
     }
 
-    const newRoutingControl = L.Routing.control({
-      waypoints: [
-        L.latLng(pickupCoords[0], pickupCoords[1]),
-        L.latLng(dropoffCoords[0], dropoffCoords[1])
-      ],
+    const waypoints = validStops.map(stop => 
+      L.latLng(stop.coordinates[0], stop.coordinates[1])
+    );
+
+    const routingControl = L.Routing.control({
+      waypoints,
       routeWhileDragging: false,
       showAlternatives: false,
       addWaypoints: false,
       show: false,
-      lineOptions: { 
+      lineOptions: {
         styles: [{ color: "#3B82F6", weight: 6, opacity: 0.8 }],
       },
       createMarker: () => null,
-    }).addTo(map);
+    })
 
-    newRoutingControl.on("routesfound", (e) => {
+    routingControl.addTo(map);
+    routingControlRef.current = routingControl;
+
+    // Fit bounds to show all markers
+    if (waypoints.length > 0) {
+      const bounds = L.latLngBounds(waypoints);
+      map.fitBounds(bounds, { padding: [50, 50] });
+    }
+
+    routingControl.on('routesfound', (e) => {
+      const container = document.querySelector('.leaflet-routing-container');
+      if (container) container.style.display = 'none';
+      
       const routeInstructions = e.routes[0].instructions.map((step, index) => ({
         id: index + 1,
         text: step.text,
@@ -57,29 +70,27 @@ const RoutingMachine = ({ pickupCoords, dropoffCoords, setDirections }) => {
       setDirections(routeInstructions);
     });
 
-    setRouteControl(newRoutingControl);
-
     return () => {
-      if (routeControl) {
-        map.removeControl(routeControl);
+      if (routingControlRef.current) {
+        map.removeControl(routingControlRef.current);
       }
     };
-  }, [pickupCoords, dropoffCoords, setDirections, map]);
+  }, [stops, map, setDirections]);
 
   return null;
 };
 
-const Map = ({ pickupLocation, dropoffLocation, onLocationSelect, setDirections }) => {
-  const pickupIcon = createCustomIcon('green');
-  const dropoffIcon = createCustomIcon('red');
-
-  useEffect(() => {
-    if (!pickupLocation || !dropoffLocation) {
-      setDirections([]);
-    }
-  }, [pickupLocation, dropoffLocation, setDirections]);
+const DynamicMap = ({ stops, setDirections }) => {
+  const getMarkerColor = (index, total) => {
+    if (index === 0) return 'green';
+    if (index === total - 1) return 'red';
+    return 'blue';
+  };
 
   const defaultCenter = [18.5204, 73.8567];
+  
+  // Only show markers for stops that have both coordinates and a non-empty address
+  const validStops = stops.filter(stop => stop.coordinates && stop.address.trim());
 
   return (
     <MapContainer 
@@ -94,33 +105,27 @@ const Map = ({ pickupLocation, dropoffLocation, onLocationSelect, setDirections 
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
 
-      {pickupLocation && (
+      {validStops.map((stop, index) => (
         <Marker 
-          position={pickupLocation} 
-          icon={pickupIcon}
-        >
-          <Popup>Pickup Location</Popup>
-        </Marker>
-      )}
+        key={`${stop.id}-${stop.address}`} // Added address to key for better updates
 
-      {dropoffLocation && (
-        <Marker 
-          position={dropoffLocation} 
-          icon={dropoffIcon}
+          position={stop.coordinates} 
+          icon={createCustomIcon(getMarkerColor(index, validStops.length))}
         >
-          <Popup>Dropoff Location</Popup>
+          <Popup>
+            {index === 0 ? "Pickup Location" : 
+             index === validStops.length - 1 ? "Dropoff Location" : 
+             `Stop ${index}`}
+          </Popup>
         </Marker>
-      )}
+      ))}
 
-      {pickupLocation && dropoffLocation && (
-        <RoutingMachine
-          pickupCoords={pickupLocation}
-          dropoffCoords={dropoffLocation}
-          setDirections={setDirections}
-        />
-      )}
+      <RoutingMachine
+        stops={stops}
+        setDirections={setDirections}
+      />
     </MapContainer>
   );
 };
 
-export default Map;
+export default DynamicMap;

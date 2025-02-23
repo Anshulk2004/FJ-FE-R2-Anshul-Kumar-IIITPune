@@ -9,18 +9,16 @@ export async function POST(req) {
     }
 
     const API_KEY = process.env.GEMINI_API_KEY;
-    const MODEL_NAME = "gemini-1.5-flash"; // Use "gemini-pro" if needed
+    const MODEL_NAME = "gemini-1.5-flash";
     const API_URL = `https://generativelanguage.googleapis.com/v1/models/${MODEL_NAME}:generateContent`;
 
-
     const response = await fetch(`${API_URL}?key=${API_KEY}`, {
-
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: userMessage }] }], // Correct structure
+        contents: [{ role: "user", parts: [{ text: `This is a ride-sharing app chatbot. Answer user queries related to cab bookings. User: ${userMessage}` }] }],
         generationConfig: {
-          temperature: 0.7,
+          temperature: 0.6,
           maxOutputTokens: 200,
         },
       }),
@@ -29,19 +27,15 @@ export async function POST(req) {
     if (!response.ok) {
       const errorText = await response.text();
       throw new Error(`API error: ${response.status} - ${errorText}`);
-
     }
 
     const data = await response.json();
-    const botMessage = data.candidates?.[0]?.content?.parts?.[0]?.text || "I couldn't generate a response.";
+    const botMessage = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't find an answer.";
 
     return NextResponse.json({ reply: botMessage });
 
   } catch (error) {
     console.error("Chatbot API Error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
