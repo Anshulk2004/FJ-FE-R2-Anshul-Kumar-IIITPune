@@ -28,7 +28,7 @@ interface Vehicle {
   seats: number;
   hourlyRate: number;
   dailyRate: number;
-  image: string;
+  src: string;
 }
 
 interface Stop {
@@ -48,20 +48,20 @@ type VehicleCategories = {
 
 const rentalVehicles: VehicleCategories = {
   economy: [
-    { id: 'e1', name: 'Suzuki Swift', seats: 4, hourlyRate: 149, dailyRate: 1999, image: '/api/placeholder/200/120' },
-    { id: 'e2', name: 'Hyundai i20', seats: 4, hourlyRate: 169, dailyRate: 2199, image: '/api/placeholder/200/120' }
+    { id: 'e1', name: 'Suzuki Swift', seats: 4, hourlyRate: 149, dailyRate: 1999, src: '/images/rentals.jpg' },
+    { id: 'e2', name: 'Hyundai i20', seats: 4, hourlyRate: 169, dailyRate: 2199, src: '/images/rentals.jpg' }
   ],
   comfort: [
-    { id: 'c1', name: 'Honda City', seats: 4, hourlyRate: 199, dailyRate: 2499, image: '/api/placeholder/200/120' },
-    { id: 'c2', name: 'Maruti Ciaz', seats: 4, hourlyRate: 209, dailyRate: 2699, image: '/api/placeholder/200/120' }
+    { id: 'c1', name: 'Honda City', seats: 4, hourlyRate: 199, dailyRate: 2499, src: '/images/rentals.jpg' },
+    { id: 'c2', name: 'Maruti Ciaz', seats: 4, hourlyRate: 209, dailyRate: 2699, src: '/images/rentals.jpg' }
   ],
   suv: [
-    { id: 's1', name: 'Toyota Innova', seats: 6, hourlyRate: 299, dailyRate: 3499, image: '/api/placeholder/200/120' },
-    { id: 's2', name: 'Mahindra XUV700', seats: 6, hourlyRate: 319, dailyRate: 3699, image: '/api/placeholder/200/120' }
+    { id: 's1', name: 'Toyota Innova', seats: 6, hourlyRate: 299, dailyRate: 3499, src: '/images/rentals.jpg' },
+    { id: 's2', name: 'Mahindra XUV700', seats: 6, hourlyRate: 319, dailyRate: 3699, src: '/images/rentals.jpg' }
   ],
   luxury: [
-    { id: 'l1', name: 'Mercedes-Benz E-Class', seats: 4, hourlyRate: 599, dailyRate: 6999, image: '/api/placeholder/200/120' },
-    { id: 'l2', name: 'BMW 5 Series', seats: 4, hourlyRate: 649, dailyRate: 7499, image: '/api/placeholder/200/120' }
+    { id: 'l1', name: 'Mercedes-Benz E-Class', seats: 4, hourlyRate: 599, dailyRate: 6999, src: '/images/rentals.jpg' },
+    { id: 'l2', name: 'BMW 5 Series', seats: 4, hourlyRate: 649, dailyRate: 7499,src: '/images/rentals.jpg' }
   ]
 };
 
@@ -203,7 +203,7 @@ const RentalsInterface = () => {
                               </div>
                             </div>
                             <img
-                              src={vehicle.image}
+                              src={vehicle.src}
                               alt={vehicle.name}
                               className="w-24 h-16 object-cover rounded"
                             />

@@ -1,5 +1,7 @@
 "use client"
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { useTheme } from './ThemeContext';
 
 const faqs = [
   {
@@ -21,6 +23,7 @@ const faqs = [
 ];
 
 export default function FAQ() {
+  const { theme } = useTheme();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   const toggleFAQ = (index: number) => {
@@ -28,24 +31,56 @@ export default function FAQ() {
   };
 
   return (
-    <section className="max-w-5xl mx-auto p-12">
-      <h2 className="text-3xl font-bold text-center text-black mb-6">Frequently Asked Questions</h2>
+    <section className={`max-w-5xl mx-auto p-6 md:p-12 
+      ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        viewport={{ once: false, margin: "-100px" }}
+        className="text-2xl md:text-3xl font-bold text-center text-black mb-6"
+      >
+        Frequently Asked Questions
+      </motion.h2>
       <div className="space-y-4">
         {faqs.map((faq, index) => (
-          <div key={index} className="border-b border-gray-200 dark:border-gray-700 py-4 flex items-start">
-            <div className="flex-grow">
-              <button
-                className="flex justify-between items-center w-full text-left"
-                onClick={() => toggleFAQ(index)}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1 }}
+            key={index}
+            className={`border-b ${
+              theme === 'dark' ? 'border-gray-700 text-white' : 'border-gray-300 text-black'
+            } py-4`}
+          >
+            <button
+              className="flex justify-between items-center w-full text-left"
+              onClick={() => setOpenIndex(openIndex === index ? null : index)}
+            >
+              <span className="text-lg md:text-xl font-bold text-black">{faq.question}</span>
+              <motion.span
+                animate={{ rotate: openIndex === index ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+                className="text-black"
               >
-                <span className="text-xl font-bold text-black">{faq.question}</span>
-                <span className={`transform transition-transform duration-300 ease-in-out ${openIndex === index ? 'rotate-180' : ''} text-black`}>⬇⬇</span>
-              </button>
-              <div className={`mt-2 transition-all duration-300 ease-in-out ${openIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}>
-                <p className="text-xl text-black">{faq.answer}</p>
-              </div>
-            </div>
-          </div>
+                ⬇
+              </motion.span>
+            </button>
+            <AnimatePresence>
+              {openIndex === index && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="overflow-hidden"
+                >
+                  <p className="text-base md:text-xl text-black pt-2">{faq.answer}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         ))}
       </div>
     </section>
