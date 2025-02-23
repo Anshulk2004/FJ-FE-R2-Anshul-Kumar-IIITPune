@@ -25,12 +25,20 @@ const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [country, setCountry] = useState('IN'); // Default to India
+  const [country, setCountry] = useState('IN'); 
+
+  const safeAmount = typeof amount === 'number' && !isNaN(amount) ? amount : 20;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     
     if (!stripe || !elements) {
+      return;
+    }
+
+    if (!safeAmount || safeAmount <= 0) {
+      setErrorMessage('Invalid payment amount');
+      onError?.('Invalid payment amount');
       return;
     }
 
@@ -49,7 +57,7 @@ const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          amount,
+          amount: safeAmount,
           rideDetails
         }),
       });
@@ -69,14 +77,13 @@ const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
         throw new Error(data.error || 'Failed to create payment intent');
       }
 
-      // Confirm card payment
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
         data.clientSecret,
         {
           payment_method: {
             card: elements.getElement(CardElement),
             billing_details: {
-              name: rideDetails.driver,
+              name: rideDetails.driver || 'Customer',
               address: {
                 country: country,
               },
@@ -138,7 +145,7 @@ const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
                   color: '#9e2146',
                 },
               },
-              hidePostalCode: true, // This removes the postal code field
+              hidePostalCode: true, 
             }}
             className="p-3 border rounded-md"
           />
@@ -162,15 +169,16 @@ const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
 };
 
 const StripePayment = ({ amount, rideDetails, onSuccess, onError }) => {
+  const safeAmount = typeof amount === 'number' && !isNaN(amount) ? amount : 20;
   return (
     <Elements stripe={stripePromise}>
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="w-full max-w-md mx-auto z-[9999] relative">
         <CardHeader>
           <CardTitle>Payment Details</CardTitle>
         </CardHeader>
         <CardContent>
           <PaymentForm
-            amount={amount}
+            amount={safeAmount}
             rideDetails={rideDetails}
             onSuccess={onSuccess}
             onError={onError}

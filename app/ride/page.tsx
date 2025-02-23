@@ -15,6 +15,9 @@ import { format } from "date-fns";
 import AuthenticatedNavbar from "../components/authenticatedNavbar";
 import DynamicMap from "../components/DynamicMap";
 import RideOptions from "../components/RideOptions";
+import { useRouter } from "next/navigation";
+import BookingDetailsPage from "../booking/page";
+
 
 interface Stop {
   id: string;
@@ -36,11 +39,7 @@ interface RouteSegment {
 
 
 
-const handleBookRide = (vehicleDetails: any) => {
-  // Handle the booking logic here
-  console.log('Booking ride with:', vehicleDetails);
-  // You can add API calls or other booking logic here
-};
+
 
 const RideBookingInterface = () => {
   const [stops, setStops] = useState<Stop[]>([
@@ -53,11 +52,25 @@ const RideBookingInterface = () => {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [showCalendar, setShowCalendar] = useState(false);
   const [showRideOptions, setShowRideOptions] = useState(false);
+  const router = useRouter(); 
 
   const getStopName = (index: number, total: number) => {
     if (index === 0) return "Pickup";
     if (index === total - 1) return "Destination";
     return `Stop ${index}`;
+  };
+
+  const handleBookRide = (vehicleDetails: { name: any; fare: { toString: () => any; }; capacity: { toString: () => any; }; eta: any; }) => {
+    // Create a URL with all necessary booking details
+    const queryParams = new URLSearchParams({
+      vehicle: vehicleDetails.name,
+      fare: vehicleDetails.fare.toString(),
+      capacity: vehicleDetails.capacity.toString(),
+      eta: vehicleDetails.eta
+    }).toString();
+    
+    // Use the push method with the complete URL
+    router.push(`/booking?${queryParams}`);
   };
 
   // Function to segment the directions between stops
@@ -335,16 +348,18 @@ const RideBookingInterface = () => {
         </DialogContent>
       </Dialog>
       <Dialog open={showRideOptions} onOpenChange={setShowRideOptions}>
-  <DialogContent className="sm:max-w-[500px] z-[9999]">
-    <DialogHeader>
-      <DialogTitle>Choose your ride</DialogTitle>
-    </DialogHeader>
-    <RideOptions onBookRide={(vehicle: any) => {
-      handleBookRide(vehicle);
-      setShowRideOptions(false);
-    }} />
-  </DialogContent>
-</Dialog>
+      <DialogContent className="sm:max-w-[500px] z-[9999]">
+        <DialogHeader>
+          <DialogTitle>Choose your ride</DialogTitle>
+        </DialogHeader>
+        <RideOptions 
+          onBookRide={(vehicle: { name: any; fare: { toString: () => any; }; capacity: { toString: () => any; }; eta: any; }) => {
+            handleBookRide(vehicle);
+            setShowRideOptions(false);
+          }} 
+        />
+      </DialogContent>
+    </Dialog>
     </div>
   );
 };

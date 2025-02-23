@@ -25,6 +25,8 @@ const PaymentModal = ({
   const [showAddPayment, setShowAddPayment] = useState(false);
   const [newPaymentType, setNewPaymentType] = useState(null);
 
+  const safeAmount = typeof amount === 'number' ? amount : 20;
+
   const paymentMethods = [
     {
       id: 'wallet',
@@ -146,7 +148,7 @@ const PaymentModal = ({
   );
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[9999]">
       <div className="bg-white rounded-xl p-6 max-w-md w-full mt-16">
         {paymentSuccess ? (
           <div className="text-center">
@@ -163,7 +165,7 @@ const PaymentModal = ({
             </button>
             <h2 className="text-xl font-bold">Card Payment</h2>
             <StripePayment
-              amount={amount}
+              amount={Number(safeAmount)}
               rideDetails={rideDetails}
               onSuccess={() => {
                 setPaymentSuccess(true);
@@ -197,12 +199,13 @@ const PaymentModal = ({
 
 const PaymentButton = ({ ride }) => {
   const [showPayment, setShowPayment] = useState(false);
+  const fare = typeof ride?.fare === 'number' ? ride.fare : 20;
 
   return (
     <>
       <button
         onClick={() => setShowPayment(true)}
-        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors z-[9999] relative"
       >
         <CreditCard className="w-4 h-4" />
         Pay Bill
@@ -211,7 +214,7 @@ const PaymentButton = ({ ride }) => {
       {showPayment && (
         <PaymentModal
           onClose={() => setShowPayment(false)}
-          amount={ride.fare}
+          amount={Number(fare)}
           rideDetails={ride}
         />
       )}

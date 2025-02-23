@@ -99,9 +99,17 @@ const RideOptions = ({ onBookRide }) => {
     setSelectedVehicle(vehicle);
   };
 
+  
   const handleBooking = () => {
     if (selectedVehicle) {
-      onBookRide(selectedVehicle);
+      // Make sure we're passing all necessary vehicle details
+      onBookRide({
+        ...selectedVehicle,
+        name: selectedVehicle.name,
+        fare: selectedVehicle.fare,
+        capacity: selectedVehicle.capacity,
+        eta: selectedVehicle.eta
+      });
     }
   };
 
