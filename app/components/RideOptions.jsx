@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Car, Navigation2 } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -52,7 +53,7 @@ const vehicleOptions = {
   ]
 };
 
-const VehicleCard = ({ vehicle, onSelect, isSelected }) => (
+const VehicleCard = ({ vehicle, onSelect, isSelected, sharedRide, passengers }) => (
   <div 
     className={`p-4 border rounded-lg mb-3 cursor-pointer transition-all ${
       isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'
@@ -61,7 +62,6 @@ const VehicleCard = ({ vehicle, onSelect, isSelected }) => (
   >
     <div className="flex items-center gap-4">
       <div className="w-20 h-20 relative rounded-lg overflow-hidden bg-gray-200">
-        {/* Fallback icon if image fails to load */}
         <Car className="absolute inset-0 m-auto text-gray-400" size={32} />
         <Image
           src={vehicle.image}
@@ -83,7 +83,7 @@ const VehicleCard = ({ vehicle, onSelect, isSelected }) => (
             Up to {vehicle.capacity} people
           </span>
           <span className="font-semibold text-lg">
-            ₹{vehicle.fare}
+            ₹{sharedRide ? Math.ceil(vehicle.fare / passengers) : vehicle.fare}
           </span>
         </div>
       </div>
@@ -91,7 +91,27 @@ const VehicleCard = ({ vehicle, onSelect, isSelected }) => (
   </div>
 );
 
-const RideOptions = ({ onBookRide }) => {
+VehicleCard.propTypes = {
+  vehicle: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    capacity: PropTypes.number.isRequired,
+    fare: PropTypes.number.isRequired,
+    image: PropTypes.string.isRequired,
+    eta: PropTypes.string.isRequired
+  }).isRequired,
+  onSelect: PropTypes.func.isRequired,
+  isSelected: PropTypes.bool.isRequired,
+  sharedRide: PropTypes.bool,
+  passengers: PropTypes.number
+};
+
+VehicleCard.defaultProps = {
+  sharedRide: false,
+  passengers: 1
+};
+
+const RideOptions = ({ onBookRide, isShared = false, passengerCount = 1 }) => {
   const [selectedTab, setSelectedTab] = useState('economy');
   const [selectedVehicle, setSelectedVehicle] = useState(null);
 
@@ -99,17 +119,9 @@ const RideOptions = ({ onBookRide }) => {
     setSelectedVehicle(vehicle);
   };
 
-  
   const handleBooking = () => {
     if (selectedVehicle) {
-      // Make sure we're passing all necessary vehicle details
-      onBookRide({
-        ...selectedVehicle,
-        name: selectedVehicle.name,
-        fare: selectedVehicle.fare,
-        capacity: selectedVehicle.capacity,
-        eta: selectedVehicle.eta
-      });
+      onBookRide(selectedVehicle);
     }
   };
 
@@ -129,6 +141,8 @@ const RideOptions = ({ onBookRide }) => {
                 vehicle={vehicle}
                 onSelect={handleVehicleSelect}
                 isSelected={selectedVehicle?.id === vehicle.id}
+                sharedRide={isShared}
+                passengers={passengerCount}
               />
             ))}
           </TabsContent>
@@ -140,6 +154,8 @@ const RideOptions = ({ onBookRide }) => {
                 vehicle={vehicle}
                 onSelect={handleVehicleSelect}
                 isSelected={selectedVehicle?.id === vehicle.id}
+                sharedRide={isShared}
+                passengers={passengerCount}
               />
             ))}
           </TabsContent>
@@ -150,11 +166,28 @@ const RideOptions = ({ onBookRide }) => {
           onClick={handleBooking}
           disabled={!selectedVehicle}
         >
-          Book {selectedVehicle ? selectedVehicle.name : 'Ride'} - ₹{selectedVehicle?.fare || '--'}
+          Book {selectedVehicle ? selectedVehicle.name : 'Ride'} - ₹{
+            selectedVehicle 
+              ? (isShared 
+                ? Math.ceil(selectedVehicle.fare / passengerCount) 
+                : selectedVehicle.fare) 
+              : '--'
+          }
         </Button>
       </CardContent>
     </Card>
   );
+};
+
+RideOptions.propTypes = {
+  onBookRide: PropTypes.func.isRequired,
+  isShared: PropTypes.bool,
+  passengerCount: PropTypes.number
+};
+
+RideOptions.defaultProps = {
+  isShared: false,
+  passengerCount: 1
 };
 
 export default RideOptions;

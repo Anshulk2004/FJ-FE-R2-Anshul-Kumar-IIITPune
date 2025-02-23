@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/PaymentButton.js", "app/components/Map.js", "app/components/RideOptions.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "components/PaymentButton.js", "app/components/Map.js", "app/components/RideOptions.jsx", "app/components/CourierReceipt.jsx"],
   "exclude": ["node_modules"]
 }

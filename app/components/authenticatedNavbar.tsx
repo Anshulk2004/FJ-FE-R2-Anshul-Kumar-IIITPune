@@ -71,7 +71,7 @@ export default function AuthenticatedNavbar() {
           </button>
           <div className="relative">
             <button 
-              className="text-black px-6 py-2 bg-yellow-400 rounded-full hover:bg-yellow-500 transition-all flex items-center gap-2"
+              className="text-black px-6 py-2 bg-yellow-400 rounded-full hover:bg-yellow-500 transition-all flex items-center gap-2 z-9999"
               onClick={() => setShowProfileMenu(!showProfileMenu)}
             >
               <span className="text-xl">👤</span>
@@ -79,7 +79,7 @@ export default function AuthenticatedNavbar() {
             </button>
 
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-50">
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2 z-[9999]">
                 <Link 
                   href="/account" 
                   className="block w-full text-left px-4 py-2 hover:bg-gray-100"
