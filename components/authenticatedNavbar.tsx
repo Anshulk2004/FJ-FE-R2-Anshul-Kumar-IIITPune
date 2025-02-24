@@ -63,6 +63,11 @@ export default function AuthenticatedNavbar() {
       href: "/bookings",
     },
     {
+      label: "Loyalty Rewards",
+      icon: "🏆",
+      href: "/loyalty",
+    },
+    {
       label: "Feedback",
       icon: "💭",
       href: "/feedback",
@@ -150,7 +155,7 @@ export default function AuthenticatedNavbar() {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-3"
           >
-            {/* Notification Bell */}
+            
             <div className="relative">
               <button
                 onClick={() => {
@@ -204,7 +209,7 @@ export default function AuthenticatedNavbar() {
               </AnimatePresence>
             </div>
 
-            {/* Theme Toggle */}
+         
             <button
               onClick={toggleTheme}
               className="text-white hover:text-yellow-400 transition-all p-2"
@@ -331,7 +336,6 @@ export default function AuthenticatedNavbar() {
                   )
                 ))}
                 
-                {/* Mobile Notifications */}
                 <div className="border-t border-gray-600 my-2" />
                 <button
                   className="w-full text-left flex items-center gap-3 py-2 text-white hover:text-yellow-400 transition-all"
