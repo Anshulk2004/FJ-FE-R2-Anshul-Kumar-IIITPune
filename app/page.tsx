@@ -1,13 +1,13 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Chatbot from "./components/Chatbot";
-import Suggestions from "./components/suggestions";
-import Features from "./components/features";
-import FAQ from "./components/faq";
-import Footer from "./components/footer";
-import AuthenticatedNavbar from "./components/authenticatedNavbar";
-import { useTheme } from "./components/ThemeContext";
+import Chatbot from "../components/Chatbot";
+import Suggestions from "../components/suggestions";
+import Features from "../components/features";
+import FAQ from "../components/faq";
+import Footer from "../components/footer";
+import AuthenticatedNavbar from "../components/authenticatedNavbar";
+import { useTheme } from "../components/ThemeContext";
 
 export default function Home() {
   const { theme } = useTheme();

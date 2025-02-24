@@ -27,7 +27,7 @@ import {
   Sun,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useTheme } from "@/app/components/ThemeContext";
+import { useTheme } from "@/components/ThemeContext";
 import {
   Dialog,
   DialogContent,

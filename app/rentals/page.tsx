@@ -28,9 +28,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import AuthenticatedNavbar from "../components/authenticatedNavbar";
-import DynamicMap from "../components/DynamicMap";
-import { useTheme } from "@/app/components/ThemeContext";
+import AuthenticatedNavbar from "../../components/authenticatedNavbar";
+import DynamicMap from "../../components/DynamicMap";
+import { useTheme } from "@/components/ThemeContext";
 import PaymentButton from "@/components/PaymentButton";
 
 interface Vehicle {

@@ -17,10 +17,10 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
-import { useTheme } from "@/app/components/ThemeContext";
-import AuthenticatedNavbar from "../components/authenticatedNavbar";
-import DynamicMap from "../components/DynamicMap";
-import RideOptions from "../components/RideOptions";
+import { useTheme } from "@/components/ThemeContext";
+import AuthenticatedNavbar from "../../components/authenticatedNavbar";
+import DynamicMap from "../../components/DynamicMap";
+import RideOptions from "../../components/RideOptions";
 import { useRouter } from "next/navigation";
 
 interface Stop {

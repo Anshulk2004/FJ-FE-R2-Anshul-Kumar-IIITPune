@@ -20,10 +20,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import AuthenticatedNavbar from "../components/authenticatedNavbar";
-import DynamicMap from "../components/DynamicMap";
-import CourierReceipt from "../components/CourierReceipt";
-import { useTheme } from "@/app/components/ThemeContext";
+import AuthenticatedNavbar from "../../components/authenticatedNavbar";
+import DynamicMap from "../../components/DynamicMap";
+import CourierReceipt from "../../components/CourierReceipt";
+import { useTheme } from "@/components/ThemeContext";
 
 interface Location {
   address: string;

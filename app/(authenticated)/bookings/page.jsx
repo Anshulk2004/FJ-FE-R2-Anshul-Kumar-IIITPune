@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Receipt, Sun, Moon, ChevronDown, ChevronUp } from "lucide-react";
-import { useTheme } from "@/app/components/ThemeContext";
+import { useTheme } from "@/components/ThemeContext";
 import { motion, AnimatePresence } from 'framer-motion';
 
 const RideCard = ({ ride, showReceiptButton = false, setShowReceipt, setSelectedRide }) => {
@@ -252,7 +252,7 @@ const BookingsPage = () => {
       </Card>
     );
   };
-  
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white pt-16">
       <div className="max-w-4xl mx-auto px-8">

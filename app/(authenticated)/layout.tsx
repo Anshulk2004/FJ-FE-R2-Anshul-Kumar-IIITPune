@@ -1,4 +1,4 @@
-import AuthenticatedNavbar from "@/app/components/authenticatedNavbar";
+import AuthenticatedNavbar from "@/components/authenticatedNavbar";
 
 export default function AuthenticatedLayout({
   children,

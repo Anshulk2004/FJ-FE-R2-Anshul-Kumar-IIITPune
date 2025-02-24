@@ -11,8 +11,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useTheme } from "@/app/components/ThemeContext";
-import AuthenticatedNavbar from "../components/authenticatedNavbar";
+import { useTheme } from "@/components/ThemeContext";
+import AuthenticatedNavbar from "../../components/authenticatedNavbar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface FormData {

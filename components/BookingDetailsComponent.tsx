@@ -34,7 +34,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from 'react'
 import PaymentButton from "@/components/PaymentButton";
 import Link from "next/link";
-import { useTheme } from "@/app/components/ThemeContext";
+import { useTheme } from "@/components/ThemeContext";
 import AuthenticatedNavbar from "../components/authenticatedNavbar";
 
 const BookingDetailsPage = () => {

@@ -19,11 +19,11 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import AuthenticatedNavbar from "../components/authenticatedNavbar";
-import DynamicMap from "../components/DynamicMap";
-import RideOptions from "../components/RideOptions";
+import AuthenticatedNavbar from "../../components/authenticatedNavbar";
+import DynamicMap from "../../components/DynamicMap";
+import RideOptions from "../../components/RideOptions";
 import { useRouter } from "next/navigation";
-import { useTheme } from "@/app/components/ThemeContext";
+import { useTheme } from "@/components/ThemeContext";
 
 interface Stop {
   id: string;

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "@/app/components/ThemeContext";
+import { useTheme } from "@/components/ThemeContext";
 import {
   Star,
   Coins,
