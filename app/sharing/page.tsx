@@ -201,7 +201,7 @@ const RideSharingInterface = () => {
         <AuthenticatedNavbar />
       </div>
 
-      <div className="container mx-auto px-4 pt-24">
+      <div className="container mx-auto px-4 pt-24 relative z-0">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-4 space-y-6">
             <Card
@@ -459,7 +459,7 @@ const RideSharingInterface = () => {
             </Alert>
           </div>
 
-          <div className="col-span-12 md:col-span-8 h-[700px] rounded-lg overflow-hidden shadow-lg">
+          <div className="col-span-12 md:col-span-8 h-[700px] rounded-lg overflow-hidden shadow-lg relative z-0">
             <DynamicMap stops={stops} setDirections={() => {}} theme={theme} />
           </div>
         </div>

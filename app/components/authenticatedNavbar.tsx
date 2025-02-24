@@ -57,14 +57,14 @@ export default function AuthenticatedNavbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm dark:bg-white/10"
+            className="fixed inset-0 z-[9997] bg-black/20 backdrop-blur-sm dark:bg-white/10"
             onClick={() => setShowProfileMenu(false)}
           />
         )}
       </AnimatePresence>
 
       <nav
-        className={`fixed top-1 left-1/2 transform -translate-x-1/2 z-50 w-[95%] md:w-[85%] lg:w-[80%] 
+        className={`fixed top-1 left-1/2 transform -translate-x-1/2 z-[9998] w-[95%] md:w-[85%] lg:w-[80%] 
       ${
         theme === "dark" ? "bg-gray-900/50" : "bg-black/50"
       } backdrop-blur-md rounded-full`}
@@ -133,7 +133,7 @@ export default function AuthenticatedNavbar() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl py-2 z-50"
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl py-2 z-[9999]"
                   >
                     {profileMenuItems.map((item, index) => (
                       <Link

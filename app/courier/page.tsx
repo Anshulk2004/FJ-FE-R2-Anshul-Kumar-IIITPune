@@ -184,7 +184,7 @@ const CourierInterface = () => {
         <AuthenticatedNavbar />
       </div>
 
-      <div className="container mx-auto px-4 pt-24 flex flex-col md:flex-row gap-6">
+      <div className="container mx-auto px-4 pt-24 flex flex-col md:flex-row gap-6 relative z-0">
         <div className="w-full md:w-1/3 space-y-6">
           <Card
             className={`shadow-lg ${
@@ -609,7 +609,7 @@ const CourierInterface = () => {
         </div>
 
         <div className="w-full md:w-2/3 h-[calc(100vh-6rem)] sticky top-24">
-          <div className="h-full rounded-lg overflow-hidden shadow-lg">
+          <div className="h-full rounded-lg overflow-hidden shadow-lg relative z-0">
             <DynamicMap
               stops={[
                 {

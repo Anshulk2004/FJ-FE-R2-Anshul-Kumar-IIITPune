@@ -194,10 +194,10 @@ const RideBookingInterface = () => {
           : "bg-gray-100 text-gray-800"
       }`}
     >
-      <div className="fixed top-0 left-0 w-full z-50">
+      <div className="fixed top-0 left-0 w-full z-[9998]">
         <AuthenticatedNavbar />
       </div>
-      <div className="container mx-auto px-4 pt-24">
+      <div className="container mx-auto px-4 pt-24 relative z-0">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 md:col-span-4 space-y-6">
             <Card
@@ -411,7 +411,7 @@ const RideBookingInterface = () => {
             </Card>
           </div>
 
-          <div className="md:col-span-8 h-[400px] md:h-[700px] rounded-lg overflow-hidden shadow-lg">
+          <div className="md:col-span-8 h-[400px] md:h-[700px] rounded-lg overflow-hidden shadow-lg relative z-0">
             <DynamicMap
               stops={stops}
               setDirections={setDirections}

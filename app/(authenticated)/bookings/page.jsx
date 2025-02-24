@@ -1,453 +1,384 @@
 "use client";
-import React, { useState } from "react";
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  ChevronDown,
-  ChevronUp,
-  Clock,
-  Users,
-  Car,
-  DollarSign,
-  FileText,
-  CreditCard,
-  MessageSquare,
-  Moon,
-  Sun,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Receipt, Sun, Moon, ChevronDown, ChevronUp } from "lucide-react";
 import { useTheme } from "@/app/components/ThemeContext";
-import Link from "next/link";
-import StripePayment from "@/components/StripePayment";
-import PaymentButton from "@/components/PaymentButton";
+import { motion, AnimatePresence } from 'framer-motion';
 
-export default function BookingsPage() {
-  const [showAllPastRides, setShowAllPastRides] = useState(false);
-  const [showPayment, setShowPayment] = useState(false);
-  const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const { theme, toggleTheme } = useTheme();
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 0.5,
-        staggerChildren: 0.15,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5 },
-    },
-  };
-
-  const currentRide = {
-    id: "CR001",
-    driver: "Michael Chen",
-    date: "Feb 22, 2025",
-    time: "14:30",
-    pickup: "123 Main St",
-    dropoff: "456 Park Ave",
-    passengers: 2,
-    fare: 25.5,
-    status: "In Progress",
-    service: "Premium",
-  };
-
-  const upcomingRide = {
-    id: "UR001",
-    driver: "Sarah Johnson",
-    date: "Feb 23, 2025",
-    time: "09:15",
-    pickup: "789 Oak Rd",
-    dropoff: "Airport Terminal 2",
-    passengers: 3,
-    fare: 45.0,
-    status: "Scheduled",
-    service: "Economy",
-  };
-
-  const pastRides = [
-    {
-      id: "PR001",
-      driver: "James Wilson",
-      date: "Feb 20, 2025",
-      time: "11:20",
-      pickup: "Central Station",
-      dropoff: "Shopping Mall",
-      passengers: 1,
-      fare: 18.75,
-      status: "Completed",
-      service: "Economy",
-    },
-    {
-      id: "PR002",
-      driver: "Emily Davis",
-      date: "Feb 18, 2025",
-      time: "16:45",
-      pickup: "Library",
-      dropoff: "City Center",
-      passengers: 2,
-      fare: 22.5,
-      status: "Completed",
-      service: "Premium",
-    },
-    {
-      id: "PR003",
-      driver: "Robert Brown",
-      date: "Feb 15, 2025",
-      time: "13:30",
-      pickup: "Gym",
-      dropoff: "Restaurant Row",
-      passengers: 4,
-      fare: 35.0,
-      status: "Completed",
-      service: "Premium",
-    },
-    {
-      id: "PR004",
-      driver: "Lisa Martinez",
-      date: "Feb 12, 2025",
-      time: "19:15",
-      pickup: "Concert Hall",
-      dropoff: "Residential Area",
-      passengers: 2,
-      fare: 28.5,
-      status: "Completed",
-      service: "Economy",
-    },
-  ];
-
-  const RideCard = ({ ride, type }) => (
-    <motion.div
-      variants={itemVariants}
-      className={`${
-        theme === "dark"
-          ? "bg-gray-800 border-gray-700"
-          : "bg-white border-gray-200"
-      } rounded-xl shadow-sm border p-6 transition-all hover:shadow-md`}
+const RideCard = ({ ride, showReceiptButton = false, setShowReceipt, setSelectedRide }) => {
+  return (
+    <motion.div 
+      className="bg-white dark:bg-gray-800 p-6 rounded-lg mb-4 shadow-lg"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
     >
-      <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
-        <div className="flex-grow">
-          <div className="flex flex-wrap items-center gap-3 mb-1">
-            <h4
-              className={`text-xl font-semibold ${
-                theme === "dark" ? "text-white" : "text-gray-900"
-              }`}
-            >
-              {ride.driver}
-            </h4>
-            <span
-              className={`px-3 py-1 rounded-full text-sm font-medium ${
-                type === "current"
-                  ? "bg-blue-100 text-blue-800"
-                  : type === "upcoming"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-gray-100 text-gray-800"
-              }`}
-            >
+      <div className="flex justify-between items-start">
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <h3 className="text-gray-900 dark:text-white text-lg font-semibold">{ride.name}</h3>
+            <span className={`px-2 py-1 rounded text-sm text-white ${
+              ride.status === 'In Progress' ? 'bg-blue-500' :
+              ride.status === 'Scheduled' ? 'bg-green-500' :
+              'bg-gray-500'
+            }`}>
               {ride.status}
             </span>
-            <span
-              className={`px-3 py-1 rounded-full text-sm font-medium ${
-                ride.service === "Premium"
-                  ? "bg-purple-100 text-purple-800"
-                  : "bg-orange-100 text-orange-800"
-              }`}
-            >
-              {ride.service}
+            <span className={`px-2 py-1 rounded text-sm text-white ${
+              ride.type === 'Premium' ? 'bg-purple-500' : 'bg-orange-500'
+            }`}>
+              {ride.type}
             </span>
           </div>
-          <p
-            className={`text-sm ${
-              theme === "dark" ? "text-gray-400" : "text-gray-500"
-            } mb-4`}
-          >
-            Booking ID: {ride.id}
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 mb-6">
-            <div className="flex items-center gap-3">
-              <Clock
-                className={`w-5 h-5 ${
-                  theme === "dark" ? "text-gray-400" : "text-gray-500"
-                }`}
-              />
-              <div>
-                <p
-                  className={`text-sm font-medium ${
-                    theme === "dark" ? "text-gray-200" : "text-gray-900"
-                  }`}
-                >
-                  {ride.date}
-                </p>
-                <p
-                  className={`text-sm ${
-                    theme === "dark" ? "text-gray-400" : "text-gray-500"
-                  }`}
-                >
-                  {ride.time}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <Users
-                className={`w-5 h-5 ${
-                  theme === "dark" ? "text-gray-400" : "text-gray-500"
-                }`}
-              />
-              <div>
-                <p
-                  className={`text-sm font-medium ${
-                    theme === "dark" ? "text-gray-200" : "text-gray-900"
-                  }`}
-                >
-                  {ride.passengers} passengers
-                </p>
-              </div>
-            </div>
-            <div className="col-span-1 sm:col-span-2">
-              <div className="flex items-center gap-3">
-                <Car
-                  className={`w-5 h-5 ${
-                    theme === "dark" ? "text-gray-400" : "text-gray-500"
-                  }`}
-                />
-                <div>
-                  <p
-                    className={`text-sm font-medium ${
-                      theme === "dark" ? "text-gray-200" : "text-gray-900"
-                    }`}
-                  >
-                    {ride.pickup}
-                  </p>
-                  <p
-                    className={`text-sm ${
-                      theme === "dark" ? "text-gray-400" : "text-gray-500"
-                    }`}
-                  >
-                    →
-                  </p>
-                  <p
-                    className={`text-sm font-medium ${
-                      theme === "dark" ? "text-gray-200" : "text-gray-900"
-                    }`}
-                  >
-                    {ride.dropoff}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            {type === "current" && <PaymentButton ride={ride} />}
-            {type === "past" && (
-              <>
-                <button
-                  className={`flex items-center gap-2 px-4 py-2 ${
-                    theme === "dark"
-                      ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                  } rounded-lg transition-colors`}
-                >
-                  <FileText className="w-4 h-4" />
-                  View Transcript
-                </button>
-                <Link href="/feedback">
-                  <button
-                    className={`flex items-center gap-2 px-4 py-2 ${
-                      theme === "dark"
-                        ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    } rounded-lg transition-colors`}
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                    Give Feedback
-                  </button>
-                </Link>
-              </>
-            )}
-          </div>
+          <p className="text-gray-600 dark:text-gray-400">Booking ID: {ride.id}</p>
         </div>
-
-        <div className="ml-0 md:ml-5 flex flex-col items-start md:items-end">
-          <img
-            src="/images/rentals.jpg"
-            alt={`${ride.service} Vehicle`}
-            className="rounded-lg mb-3 object-cover w-full md:w-25 h-20"
-          />
-          <div
-            className={`text-2xl font-bold ${
-              theme === "dark" ? "text-white" : "text-gray-900"
-            }`}
-          >
-            ${ride.fare.toFixed(2)}
-          </div>
+        <div className="text-right">
+          <p className="text-gray-900 dark:text-white text-xl font-bold">₹{ride.price}</p>
         </div>
+      </div>
+
+      <div className="mt-4 space-y-2">
+        <div className="flex items-center text-gray-700 dark:text-gray-300">
+          <span className="w-32">Date & Time:</span>
+          <span>{ride.date} {ride.time}</span>
+        </div>
+        <div className="flex items-center text-gray-700 dark:text-gray-300">
+          <span className="w-32">Pickup:</span>
+          <span>{ride.pickup}</span>
+        </div>
+        <div className="flex items-center text-gray-700 dark:text-gray-300">
+          <span className="w-32">Drop-off:</span>
+          <span>{ride.dropoff}</span>
+        </div>
+        <div className="flex items-center text-gray-700 dark:text-gray-300">
+          <span className="w-32">Passengers:</span>
+          <span>{ride.passengers}</span>
+        </div>
+      </div>
+
+      <div className="mt-4 flex justify-between items-center">
+        {!ride.completed && (
+          <Button variant="primary" className="bg-blue-500 text-white hover:bg-blue-600">
+            Pay ₹{ride.price}
+          </Button>
+        )}
+        {showReceiptButton && ride.completed && (
+          <Button 
+            variant="outline" 
+            className="border-blue-500 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900"
+            onClick={() => {
+              setSelectedRide(ride);
+              setShowReceipt(true);
+            }}
+          >
+            View Receipt
+          </Button>
+        )}
       </div>
     </motion.div>
   );
+};
 
+const BookingsPage = () => {
+  const { theme, toggleTheme } = useTheme();
+  const [showReceipt, setShowReceipt] = React.useState(false);
+  const [selectedRide, setSelectedRide] = React.useState(null);
+  const [showAllPastRides, setShowAllPastRides] = React.useState(false);
+
+  const currentRide = {
+    id: 'CR001',
+    name: 'Rajesh Sharma',
+    status: 'In Progress',
+    type: 'Premium',
+    date: 'Feb 22, 2025',
+    time: '14:30',
+    pickup: 'FC Road, Pune',
+    dropoff: 'Koregaon Park, Pune',
+    passengers: 2,
+    price: 850.00,
+    completed: false
+  };
+
+  const upcomingRides = [
+    {
+      id: 'UR001',
+      name: 'Priya Patel',
+      status: 'Scheduled',
+      type: 'Economy',
+      date: 'Feb 25, 2025',
+      time: '10:00',
+      pickup: 'Aundh, Pune',
+      dropoff: 'Viman Nagar, Pune',
+      passengers: 1,
+      price: 450.00,
+      completed: false
+    }
+  ];
+
+  const pastRides = [
+    {
+      id: 'PR001',
+      name: 'Ankit Mehta',
+      status: 'Completed',
+      type: 'Premium',
+      date: 'Feb 20, 2025',
+      time: '16:45',
+      pickup: 'Shivaji Nagar, Pune',
+      dropoff: 'Hadapsar, Pune',
+      passengers: 3,
+      price: 950.00,
+      completed: true
+    },
+    {
+      id: 'PR002',
+      name: 'Neha Gupta',
+      status: 'Completed',
+      type: 'Economy',
+      date: 'Feb 18, 2025',
+      time: '09:30',
+      pickup: 'Baner, Pune',
+      dropoff: 'Hinjewadi, Pune',
+      passengers: 1,
+      price: 550.00,
+      completed: true
+    },
+    {
+      id: 'PR003',
+      name: 'Vikram Singh',
+      status: 'Completed',
+      type: 'Premium',
+      date: 'Feb 15, 2025',
+      time: '14:15',
+      pickup: 'Kothrud, Pune',
+      dropoff: 'Magarpatta, Pune',
+      passengers: 2,
+      price: 750.00,
+      completed: true
+    },
+    {
+      id: 'PR004',
+      name: 'Meera Desai',
+      status: 'Completed',
+      type: 'Economy',
+      date: 'Feb 12, 2025',
+      time: '11:00',
+      pickup: 'Kalyani Nagar, Pune',
+      dropoff: 'Wakad, Pune',
+      passengers: 1,
+      price: 600.00,
+      completed: true
+    }
+  ];
+
+  const Receipt = ({ ride, onClose }) => {
+    // Add a guard clause to prevent rendering if ride is undefined
+    if (!ride) return null;
+  
+    return (
+      <Card className="bg-white dark:bg-gray-800 shadow-lg">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+            <Receipt className="mr-2 text-blue-500" size={24} /> Ride Receipt
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold text-lg text-blue-600 dark:text-blue-400">Ride Details</h3>
+              <p className="text-gray-700 dark:text-gray-300">
+                {ride?.type} Ride - {ride?.id}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                Date & Time: {ride?.date} {ride?.time}
+              </p>
+            </div>
+            <Separator className="dark:bg-gray-600" />
+  
+            <div>
+              <h3 className="font-semibold text-lg text-blue-600 dark:text-blue-400">
+                Pickup & Drop-off
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300">
+                <span className="font-semibold">Pickup:</span> {ride?.pickup}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                <span className="font-semibold">Drop-off:</span> {ride?.dropoff}
+              </p>
+            </div>
+            <Separator className="dark:bg-gray-600" />
+  
+            <div>
+              <h3 className="font-semibold text-lg text-blue-600 dark:text-blue-400">
+                Passenger Details
+              </h3>
+              <p className="text-gray-700 dark:text-gray-300">
+                <span className="font-semibold">Name:</span> {ride?.name}
+              </p>
+              <p className="text-gray-700 dark:text-gray-300">
+                <span className="font-semibold">Passengers:</span> {ride?.passengers}
+              </p>
+            </div>
+            <Separator className="dark:bg-gray-600" />
+  
+            <div className="bg-blue-50 dark:bg-blue-900 p-4 rounded-md">
+              <h3 className="font-semibold text-lg text-blue-600 dark:text-blue-400">
+                Price Summary
+              </h3>
+              <p className="text-gray-900 dark:text-white font-semibold text-xl">
+                Total: ₹{ride?.price}
+              </p>
+            </div>
+          </div>
+  
+          <div className="mt-6 flex justify-end gap-2">
+            <Button 
+              variant="outline" 
+              className="dark:text-white dark:hover:bg-gray-700"
+              onClick={() => window.print()}
+            >
+              Print Receipt
+            </Button>
+            <Button 
+              variant="outline" 
+              className="dark:text-white dark:hover:bg-gray-700"
+              onClick={onClose}
+            >
+              Close
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+  
   return (
-    <div
-      className={`min-h-screen ${
-        theme === "dark" ? "bg-gray-900" : "bg-gray-50"
-      } p-4 md:p-6 pt-20 transition-colors duration-300`}
-    >
-      <motion.button
-        className={`fixed top-24 right-4 p-2 rounded-full ${
-          theme === "dark" ? "bg-gray-800" : "bg-white"
-        } shadow-lg z-50`}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        onClick={toggleTheme}
-      >
-        {theme === "dark" ? (
-          <Sun className="w-6 h-6 text-white" />
-        ) : (
-          <Moon className="w-6 h-6" />
-        )}
-      </motion.button>
-
-      <motion.div
-        className="max-w-6xl mx-auto"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.h1
-          variants={itemVariants}
-          className={`text-4xl font-bold mb-8 ${
-            theme === "dark" ? "text-white" : ""
-          }`}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white pt-16">
+      <div className="max-w-4xl mx-auto px-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-between items-center mb-12 mt-8"
         >
-          My Bookings
-        </motion.h1>
-
-        <div className="space-y-12">
-          <motion.section
-            variants={itemVariants}
-            className={`${
-              theme === "dark"
-                ? "bg-gray-800 border-gray-700"
-                : "bg-white border-gray-200"
-            } rounded-2xl p-4 md:p-8 shadow-sm border transition-colors duration-300`}
+          <h1 className="text-3xl font-bold">My Bookings</h1>
+          <Button
+            variant="outline"
+            className="p-2 rounded-full"
+            onClick={toggleTheme}
           >
-            <h2
-              className={`text-2xl font-semibold mb-6 ${
-                theme === "dark" ? "text-white" : ""
-              }`}
-            >
-              Current Ride
-            </h2>
-            <div
-              className={`${
-                theme === "dark" ? "bg-gray-700/50" : "bg-blue-50/50"
-              } rounded-xl p-1`}
-            >
-              {currentRide ? (
-                <RideCard ride={currentRide} type="current" />
-              ) : (
-                <p
-                  className={`text-gray-600 p-6 ${
-                    theme === "dark" ? "text-gray-400" : ""
-                  }`}
-                >
-                  No current rides in progress.
-                </p>
-              )}
-            </div>
-          </motion.section>
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
+        </motion.div>
+        
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="mb-8"
+        >
+          {currentRide && (
+            <>
+              <h2 className="text-2xl font-semibold mb-4">Current Ride</h2>
+              <RideCard 
+                ride={currentRide} 
+                setShowReceipt={setShowReceipt}
+                setSelectedRide={setSelectedRide}
+              />
+            </>
+          )}
+        </motion.section>
 
-          <motion.section
-            variants={itemVariants}
-            className={`${
-              theme === "dark"
-                ? "bg-gray-800 border-gray-700"
-                : "bg-white border-gray-200"
-            } rounded-2xl p-4 md:p-8 shadow-sm border transition-colors duration-300`}
-          >
-            <h2
-              className={`text-2xl font-semibold mb-6 ${
-                theme === "dark" ? "text-white" : ""
-              }`}
-            >
-              Upcoming Rides
-            </h2>
-            <div
-              className={`${
-                theme === "dark" ? "bg-gray-700/50" : "bg-green-50/50"
-              } rounded-xl p-1`}
-            >
-              {upcomingRide ? (
-                <RideCard ride={upcomingRide} type="upcoming" />
-              ) : (
-                <p
-                  className={`text-gray-600 p-6 ${
-                    theme === "dark" ? "text-gray-400" : ""
-                  }`}
-                >
-                  No upcoming rides scheduled.
-                </p>
-              )}
-            </div>
-          </motion.section>
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8"
+        >
+          {upcomingRides.length > 0 && (
+            <>
+              <h2 className="text-2xl font-semibold mb-4">Upcoming Rides</h2>
+              {upcomingRides.map(ride => (
+                <RideCard 
+                  key={ride.id} 
+                  ride={ride} 
+                  showReceiptButton={false}
+                  setShowReceipt={setShowReceipt}
+                  setSelectedRide={setSelectedRide}
+                />
+              ))}
+            </>
+          )}
+        </motion.section>
 
-          <motion.section
-            variants={itemVariants}
-            className={`${
-              theme === "dark"
-                ? "bg-gray-800 border-gray-700"
-                : "bg-white border-gray-200"
-            } rounded-2xl p-4 md:p-8 shadow-sm border transition-colors duration-300`}
-          >
-            <h2
-              className={`text-2xl font-semibold mb-6 ${
-                theme === "dark" ? "text-white" : ""
-              }`}
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <h2 className="text-2xl font-semibold mb-4">Past Rides</h2>
+          <AnimatePresence>
+            {pastRides.slice(0, showAllPastRides ? undefined : 2).map((ride, index) => (
+              <RideCard 
+                key={ride.id} 
+                ride={ride} 
+                showReceiptButton={true}
+                setShowReceipt={setShowReceipt}
+                setSelectedRide={setSelectedRide}
+              />
+            ))}
+          </AnimatePresence>
+          
+          {pastRides.length > 2 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="flex justify-center mt-4"
             >
-              Past Rides
-            </h2>
-            <div className="space-y-4">
-              <AnimatePresence>
-                {pastRides
-                  .slice(0, showAllPastRides ? undefined : 2)
-                  .map((ride) => (
-                    <RideCard key={ride.id} ride={ride} type="past" />
-                  ))}
-              </AnimatePresence>
+              <Button
+                variant="outline"
+                className="flex items-center gap-2"
+                onClick={() => setShowAllPastRides(!showAllPastRides)}
+              >
+                {showAllPastRides ? (
+                  <>Show Less <ChevronUp className="h-4 w-4" /></>
+                ) : (
+                  <>Show More <ChevronDown className="h-4 w-4" /></>
+                )}
+              </Button>
+            </motion.div>
+          )}
+        </motion.section>
 
-              {pastRides.length > 2 && (
-                <motion.button
-                  variants={itemVariants}
-                  onClick={() => setShowAllPastRides(!showAllPastRides)}
-                  className={`flex items-center gap-2 ${
-                    theme === "dark"
-                      ? "text-blue-400 hover:text-blue-300"
-                      : "text-blue-600 hover:text-blue-800"
-                  } transition-colors mt-6 font-medium`}
-                >
-                  {showAllPastRides ? (
-                    <>
-                      Show Less <ChevronUp className="w-5 h-5" />
-                    </>
-                  ) : (
-                    <>
-                      Show More <ChevronDown className="w-5 h-5" />
-                    </>
-                  )}
-                </motion.button>
-              )}
-            </div>
-          </motion.section>
-        </div>
-      </motion.div>
+        <AnimatePresence>
+          {showReceipt && selectedRide && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+            >
+              <motion.div 
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                className="max-w-2xl w-full"
+              >
+                <Receipt 
+                  ride={selectedRide} 
+                  onClose={() => {
+                    setShowReceipt(false);
+                    setSelectedRide(null);
+                  }}
+                />
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </div>
   );
-}
+};
+
+export default BookingsPage;

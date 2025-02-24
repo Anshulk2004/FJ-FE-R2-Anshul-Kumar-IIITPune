@@ -238,7 +238,7 @@ const RentalsInterface = () => {
         <AuthenticatedNavbar />
       </div>
 
-      <div className="container mx-auto px-4 pt-24">
+      <div className="container mx-auto px-4 pt-24 relative z-0">
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-12 lg:col-span-4 space-y-6">
             <Card
@@ -628,7 +628,7 @@ const RentalsInterface = () => {
 
           <div className="col-span-12 lg:col-span-8">
             <div className="sticky top-24 h-[calc(100vh-6rem)]">
-              <div className="w-full h-full rounded-lg overflow-hidden shadow-lg">
+              <div className="w-full h-full rounded-lg overflow-hidden shadow-lg relative z-0">
                 <DynamicMap
                   stops={stops}
                   setDirections={() => {}}

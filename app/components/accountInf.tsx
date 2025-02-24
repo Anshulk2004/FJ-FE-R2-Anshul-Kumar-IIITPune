@@ -10,6 +10,7 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ResponsiveContainer,
 } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -51,6 +52,13 @@ interface ProfileData {
   image: string;
 }
 
+interface RideData {
+  month: string;
+  rides: number;
+  earnings: number;
+}
+
+
 type AddressType = keyof typeof addressTypes;
 
 interface Address {
@@ -59,29 +67,32 @@ interface Address {
   icon: JSX.Element;
 }
 
-const rideData = [
-  { month: "Jan", rides: 12 },
-  { month: "Feb", rides: 19 },
-  { month: "Mar", rides: 15 },
-  { month: "Apr", rides: 25 },
-  { month: "May", rides: 22 },
-  { month: "Jun", rides: 30 },
+const rideData: RideData[] = [
+  { month: "Jan", rides: 12, earnings: 2400 },
+  { month: "Feb", rides: 19, earnings: 3800 },
+  { month: "Mar", rides: 15, earnings: 3000 },
+  { month: "Apr", rides: 25, earnings: 5000 },
+  { month: "May", rides: 22, earnings: 4400 },
+  { month: "Jun", rides: 30, earnings: 6000 },
 ];
 
 const locationData = [
-  { location: "Downtown", visits: 45 },
-  { location: "Airport", visits: 38 },
-  { location: "Mall", visits: 28 },
-  { location: "Beach", visits: 22 },
-  { location: "Park", visits: 15 },
+  { location: "Koregaon Park", visits: 45 },
+  { location: "Hinjewadi", visits: 38 },
+  { location: "Viman Nagar", visits: 28 },
+  { location: "Kothrud", visits: 22 },
+  { location: "Baner", visits: 15 },
 ];
-
 const addressTypes = {
   home: { icon: <Home className="w-4 h-4" /> },
   work: { icon: <Briefcase className="w-4 h-4" /> },
   friends: { icon: <Users className="w-4 h-4" /> },
   other: { icon: <MapPin className="w-4 h-4" /> },
 } as const;
+
+const totalRides = rideData.reduce((acc, curr) => acc + curr.rides, 0);
+const totalEarnings = rideData.reduce((acc, curr) => acc + curr.earnings, 0);
+const avgEarningsPerRide = (totalEarnings / totalRides).toFixed(2);
 
 export default function AccountInfo() {
   const { theme, toggleTheme } = useTheme();
@@ -107,9 +118,9 @@ export default function AccountInfo() {
   };
 
   const [profileData, setProfileData] = useState({
-    name: "John Doe",
-    email: "john.doe@email.com",
-    phone: "+1 (555) 123-4567",
+    name: "Anshul Kumar",
+    email: "anshulwork0102@gmail.com",
+    phone: "+91 9870803265",
     bio: "Frequent traveler, always on the move. Love exploring new places and meeting new people.",
     image: "/images/profile.jpg",
   });
@@ -117,20 +128,21 @@ export default function AccountInfo() {
   const [addresses, setAddresses] = useState([
     {
       type: "home",
-      address: "123 Home Street, Cityville",
+      address: "123 Marvel Residency, Viman Nagar, Pune",
       icon: <Home className="w-4 h-4" />,
     },
     {
       type: "work",
-      address: "456 Office Avenue, Worktown",
+      address: "456 Tech Park, Hinjewadi Phase 1, Pune",
       icon: <Briefcase className="w-4 h-4" />,
     },
     {
       type: "friends",
-      address: "789 Friend Lane, Socialburg",
+      address: "789 Lake Town Society, Koregaon Park, Pune",
       icon: <Users className="w-4 h-4" />,
     },
   ]);
+
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
@@ -202,38 +214,17 @@ export default function AccountInfo() {
   };
 
   return (
-    <div
-      className={`min-h-screen ${
-        theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50"
-      } p-4 md:p-20 transition-colors duration-300`}
+    <div className={`min-h-screen ${theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-50"} p-4 md:p-20 transition-colors duration-300`}>
+    <motion.div
+      className="max-w-6xl mx-auto"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
     >
       <motion.div
-        className="max-w-6xl mx-auto"
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
+        variants={itemVariants}
+        className={`${theme === "dark" ? "bg-gray-800" : "bg-white"} rounded-2xl shadow-lg p-4 md:p-8 mb-8 transition-colors duration-300`}
       >
-        <motion.button
-          className={`fixed top-24 right-4 p-2 rounded-full ${
-            theme === "dark" ? "bg-gray-800" : "bg-white"
-          } shadow-lg`}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={toggleTheme}
-        >
-          {theme === "dark" ? (
-            <Sun className="w-6 h-6" />
-          ) : (
-            <Moon className="w-6 h-6" />
-          )}
-        </motion.button>
-
-        <motion.div
-          variants={itemVariants}
-          className={`${
-            theme === "dark" ? "bg-gray-800" : "bg-white"
-          } rounded-2xl shadow-lg p-4 md:p-8 mb-8 transition-colors duration-300`}
-        >
           <div className="flex flex-col md:flex-row md:items-start gap-8">
             <div className="relative">
               <img
@@ -294,17 +285,13 @@ export default function AccountInfo() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Card
-            className={`mb-8 ${
-              theme === "dark" ? "bg-gray-800 text-white" : ""
-            }`}
-          >
+          <Card className={`mb-8 ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white"}`}>
             <CardHeader>
               <CardTitle className="flex justify-between items-center">
                 Saved Addresses
                 <Button
                   variant="outline"
-                  className="flex items-center gap-2"
+                  className={`flex items-center gap-2 ${theme === "dark" ? "text-white hover:text-gray-200" : ""}`}
                   onClick={() => {
                     setNewAddress({ type: "home", address: "" });
                     setIsAddressModalOpen(true);
@@ -319,18 +306,25 @@ export default function AccountInfo() {
                 {addresses.map((addr, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg"
+                    className={`flex items-center gap-4 p-4 ${
+                      theme === "dark" ? "bg-gray-700" : "bg-gray-50"
+                    } rounded-lg`}
                   >
                     <div className="p-2 bg-yellow-400 rounded-full">
                       {addr.icon}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold capitalize">{addr.type}</h3>
-                      <p className="text-gray-600">{addr.address}</p>
+                      <h3 className={`font-semibold capitalize ${
+                        theme === "dark" ? "text-white" : "text-gray-900"
+                      }`}>{addr.type}</h3>
+                      <p className={
+                        theme === "dark" ? "text-gray-300" : "text-gray-600"
+                      }>{addr.address}</p>
                     </div>
                     <Button
                       variant="ghost"
                       size="icon"
+                      className={theme === "dark" ? "text-white hover:text-gray-200" : ""}
                       onClick={() => handleEditAddress(idx)}
                     >
                       <Edit2 className="w-4 h-4" />
@@ -346,56 +340,88 @@ export default function AccountInfo() {
           variants={itemVariants}
           className="grid grid-cols-1 md:grid-cols-2 gap-8"
         >
-          <Card className={theme === "dark" ? "bg-gray-800 text-white" : ""}>
+          <Card className={theme === "dark" ? "bg-gray-800 text-white" : "bg-white"}>
             <CardHeader>
               <CardTitle>Monthly Rides</CardTitle>
             </CardHeader>
             <CardContent>
-              <LineChart width={500} height={300} data={rideData}>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke={theme === "dark" ? "#374151" : "#E5E7EB"}
-                />
-                <XAxis
-                  dataKey="month"
-                  stroke={theme === "dark" ? "#fff" : "#000"}
-                />
-                <YAxis stroke={theme === "dark" ? "#fff" : "#000"} />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: theme === "dark" ? "#1F2937" : "#fff",
-                    color: theme === "dark" ? "#fff" : "#000",
-                  }}
-                />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="rides"
-                  stroke="#FBBF24"
-                  strokeWidth={2}
-                  dot={{ fill: "#FBBF24" }}
-                />
-              </LineChart>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={rideData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={theme === "dark" ? "#374151" : "#E5E7EB"} />
+                  <XAxis dataKey="month" stroke={theme === "dark" ? "#fff" : "#000"} />
+                  <YAxis stroke={theme === "dark" ? "#fff" : "#000"} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: theme === "dark" ? "#1F2937" : "#fff",
+                      color: theme === "dark" ? "#fff" : "#000",
+                      border: "none",
+                    }}
+                  />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="rides"
+                    stroke="#6366F1"
+                    strokeWidth={2}
+                    dot={{ fill: "#6366F1" }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="earnings"
+                    stroke="#10B981"
+                    strokeWidth={2}
+                    dot={{ fill: "#10B981" }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+              <div className={`mt-4 grid grid-cols-3 gap-4 p-4 ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"} rounded-lg`}>
+                <div>
+                  <p className="text-sm text-gray-500">Total Rides</p>
+                  <p className="text-xl font-bold">{totalRides}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Total Earnings</p>
+                  <p className="text-xl font-bold">₹{totalEarnings}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Avg. per Ride</p>
+                  <p className="text-xl font-bold">₹{avgEarningsPerRide}</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
-          <Card className={theme === "dark" ? "bg-gray-800 text-white" : ""}>
+          <Card className={theme === "dark" ? "bg-gray-800 text-white" : "bg-white"}>
             <CardHeader>
               <CardTitle>Most Visited Locations</CardTitle>
             </CardHeader>
             <CardContent>
-              <BarChart width={500} height={300} data={locationData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="location" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="visits" fill="#FBBF24" />
-              </BarChart>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={locationData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke={theme === "dark" ? "#374151" : "#E5E7EB"} />
+                  <XAxis dataKey="location" stroke={theme === "dark" ? "#fff" : "#000"} />
+                  <YAxis stroke={theme === "dark" ? "#fff" : "#000"} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: theme === "dark" ? "#1F2937" : "#fff",
+                      color: theme === "dark" ? "#fff" : "#000",
+                      border: "none",
+                    }}
+                  />
+                  <Legend />
+                  <Bar dataKey="visits" fill="#8B5CF6" />
+                </BarChart>
+              </ResponsiveContainer>
+              <div className={`mt-4 p-4 ${theme === "dark" ? "bg-gray-700" : "bg-gray-50"} rounded-lg`}>
+                <p className="text-sm text-gray-500">Most Popular Location</p>
+                <p className="text-xl font-bold">{locationData[0].location}</p>
+                <p className="text-sm text-gray-500">{locationData[0].visits} visits</p>
+              </div>
             </CardContent>
           </Card>
         </motion.div>
       </motion.div>
+
 
       <Dialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
         <DialogContent
