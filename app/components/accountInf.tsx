@@ -1,10 +1,12 @@
 "use client"
-import { ChangeEvent, JSX, useState,MouseEvent } from 'react';
+import { ChangeEvent, JSX, useState, MouseEvent } from 'react';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Home, Briefcase, Users, MapPin, Edit2, X } from 'lucide-react';
+import { PlusCircle, Home, Briefcase, Users, MapPin, Edit2, X, Moon, Sun } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useTheme } from '@/app/components/ThemeContext';
 import {
   Dialog,
   DialogContent,
@@ -62,6 +64,28 @@ const addressTypes = {
 } as const;
 
 export default function AccountInfo() {
+  const { theme, toggleTheme } = useTheme();
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.5 }
+    }
+  };
+
   const [profileData, setProfileData] = useState({
     name: 'John Doe',
     email: 'john.doe@email.com',
@@ -148,17 +172,38 @@ export default function AccountInfo() {
   
 
   return (
-    <div className="min-h-screen bg-gray-50 p-20">
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-          <div className="flex items-start gap-8">
+    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-50'} p-4 md:p-20 transition-colors duration-300`}>
+      <motion.div 
+        className="max-w-6xl mx-auto"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {/* Theme Toggle Button */}
+        <motion.button
+          className={`fixed top-24 right-4 p-2 rounded-full ${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} shadow-lg`}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleTheme}
+        >
+          {theme === 'dark' ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
+        </motion.button>
+
+        <motion.div 
+          variants={itemVariants}
+          className={`${theme === 'dark' ? 'bg-gray-800' : 'bg-white'} rounded-2xl shadow-lg p-4 md:p-8 mb-8 transition-colors duration-300`}
+        >
+          {/* Profile Section */}
+          <div className="flex flex-col md:flex-row md:items-start gap-8">
             <div className="relative">
               <img
                 src={profileData.image}
                 alt="Profile"
                 className="w-32 h-32 rounded-full object-cover"
               />
-              <button 
+              <motion.button 
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 className="absolute bottom-0 right-0 bg-yellow-400 p-2 rounded-full shadow-lg hover:bg-yellow-500 transition-all"
                 onClick={() => {
                   setNewProfileData(profileData);
@@ -166,7 +211,7 @@ export default function AccountInfo() {
                 }}
               >
                 <Edit2 className="w-4 h-4" />
-              </button>
+              </motion.button>
             </div>
             
             <div className="flex-1">
@@ -206,9 +251,11 @@ export default function AccountInfo() {
               </div>
             </div>
           </div>
-        </div>
+        {/* </div> */}
+        </motion.div>
 
-        <Card className="mb-8">
+        <motion.div variants={itemVariants}>
+        <Card className={`mb-8 ${theme === 'dark' ? 'bg-gray-800 text-white' : ''}`}>
           <CardHeader>
             <CardTitle className="flex justify-between items-center">
               Saved Addresses
@@ -247,32 +294,35 @@ export default function AccountInfo() {
             </div>
           </CardContent>
         </Card>
+        </motion.div>
 
         {/* Charts section remains unchanged */}
-        <div className="grid md:grid-cols-2 gap-8">
-          <Card>
+        <motion.div 
+          variants={itemVariants}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
+          <Card className={theme === 'dark' ? 'bg-gray-800 text-white' : ''}>
             <CardHeader>
               <CardTitle>Monthly Rides</CardTitle>
             </CardHeader>
             <CardContent>
               <LineChart width={500} height={300} data={rideData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="month" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line 
-                  type="monotone" 
-                  dataKey="rides" 
-                  stroke="#FBBF24" 
-                  strokeWidth={2}
-                  dot={{ fill: '#FBBF24' }}
+                <CartesianGrid strokeDasharray="3 3" stroke={theme === 'dark' ? '#374151' : '#E5E7EB'} />
+                <XAxis dataKey="month" stroke={theme === 'dark' ? '#fff' : '#000'} />
+                <YAxis stroke={theme === 'dark' ? '#fff' : '#000'} />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: theme === 'dark' ? '#1F2937' : '#fff',
+                    color: theme === 'dark' ? '#fff' : '#000'
+                  }} 
                 />
+                <Legend />
+                <Line type="monotone" dataKey="rides" stroke="#FBBF24" strokeWidth={2} dot={{ fill: '#FBBF24' }} />
               </LineChart>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className={theme === 'dark' ? 'bg-gray-800 text-white' : ''}>
             <CardHeader>
               <CardTitle>Most Visited Locations</CardTitle>
             </CardHeader>
@@ -287,12 +337,12 @@ export default function AccountInfo() {
               </BarChart>
             </CardContent>
           </Card>
-        </div>
-      </div>
+          </motion.div>
+          </motion.div>
 
       {/* Edit Profile Modal */}
       <Dialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className={`sm:max-w-[425px] ${theme === 'dark' ? 'bg-gray-800 text-white' : ''}`}>
           <DialogHeader>
             <DialogTitle>Edit Profile</DialogTitle>
           </DialogHeader>
@@ -354,7 +404,7 @@ export default function AccountInfo() {
 
       {/* Add/Edit Address Modal */}
       <Dialog open={isAddressModalOpen} onOpenChange={setIsAddressModalOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className={`sm:max-w-[425px] ${theme === 'dark' ? 'bg-gray-800 text-white' : ''}`}>
         <DialogHeader>
           <DialogTitle>{editingAddress !== null ? 'Edit Address' : 'Add New Address'}</DialogTitle>
         </DialogHeader>

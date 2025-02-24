@@ -8,7 +8,6 @@ import { useTheme } from './ThemeContext';
 
 export default function AuthenticatedNavbar() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { theme, toggleTheme } = useTheme();
@@ -21,19 +20,45 @@ export default function AuthenticatedNavbar() {
     { href: "/courier", label: "Couriers" },
   ];
 
+  const profileMenuItems = [
+    { 
+      label: "Account",
+      icon: "👤",
+      href: "/account"
+    },
+    {
+      label: "Bookings",
+      icon: "📅",
+      href: "/bookings"
+    },
+    {
+      label: "Feedback",
+      icon: "💭",
+      href: "/feedback"
+    },
+    {
+      label: "Wallet",
+      icon: "💳",
+      href: "/wallet"
+    },
+    {
+      label: "Sign Out",
+      icon: "🚪",
+      href: "/logout",
+      className: "text-red-600 border-t border-gray-100"
+    }
+  ];
+
   return (
     <>
       <AnimatePresence>
-        {(showProfileMenu || showSettings) && (
+        {showProfileMenu && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
-            onClick={() => {
-              setShowProfileMenu(false);
-              setShowSettings(false);
-            }}
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm dark:bg-white/10"
+            onClick={() => setShowProfileMenu(false)}
           />
         )}
       </AnimatePresence>
@@ -51,14 +76,6 @@ export default function AuthenticatedNavbar() {
               <span className="text-white text-xl font-bold">RideOn</span>
             </Link>
           </motion.div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="md:hidden text-white"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? "✕" : "☰"}
-          </button>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
@@ -78,29 +95,6 @@ export default function AuthenticatedNavbar() {
             ))}
           </div>
 
-          {/* Mobile Navigation */}
-          <AnimatePresence>
-            {isMobileMenuOpen && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: "auto" }}
-                exit={{ opacity: 0, height: 0 }}
-                className="absolute top-full left-0 right-0 bg-black/90 rounded-b-2xl mt-2 md:hidden"
-              >
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className="block px-4 py-2 text-white hover:bg-white/10"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           {/* Profile Section */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
@@ -108,14 +102,11 @@ export default function AuthenticatedNavbar() {
             transition={{ duration: 0.5 }}
             className="flex items-center gap-5"
           >
-           <button 
-        onClick={toggleTheme}
-        className="text-white hover:text-yellow-400 transition-all p-2"
-      >
-        {theme === 'light' ? '🌙' : '☀️'}
-      </button>
-            <button className="text-white hover:text-gray-300 transition-all">
-              🌍
+            <button 
+              onClick={toggleTheme}
+              className="text-white hover:text-yellow-400 transition-all p-2"
+            >
+              {theme === 'light' ? '🌙' : '☀️'}
             </button>
             <div className="relative">
               <motion.button
@@ -134,9 +125,19 @@ export default function AuthenticatedNavbar() {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl py-2"
+                    className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-xl py-2 z-50"
                   >
-                    {/* Profile menu items... */}
+                    {profileMenuItems.map((item, index) => (
+                      <Link
+                        key={index}
+                        href={item.href}
+                        className={`flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all ${item.className || ''}`}
+                        onClick={() => setShowProfileMenu(false)}
+                      >
+                        <span>{item.icon}</span>
+                        {item.label}
+                      </Link>
+                    ))}
                   </motion.div>
                 )}
               </AnimatePresence>
