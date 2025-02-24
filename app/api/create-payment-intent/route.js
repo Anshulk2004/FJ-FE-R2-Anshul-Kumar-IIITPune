@@ -1,17 +1,12 @@
-// app/api/create-payment-intent/route.js
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-// Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(request) {
   try {
-    // Get the request body
-    const body = await request.json();
-    const { amount, rideDetails } = body;
+    const { amount } = await request.json();
 
-    // Validate the amount
     if (!amount || amount <= 0) {
       return NextResponse.json(
         { error: 'Invalid amount' },
@@ -19,20 +14,12 @@ export async function POST(request) {
       );
     }
 
-    // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Convert to cents and ensure it's an integer
-      currency: 'usd', // or your preferred currency
+      amount: Math.round(amount * 100),
+      currency: 'INR',
       payment_method_types: ['card'],
-      metadata: {
-        rideId: rideDetails.id,
-        driver: rideDetails.driver,
-        pickup: rideDetails.pickup,
-        dropoff: rideDetails.dropoff,
-      },
     });
 
-    // Return the client secret
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret
     });
@@ -40,7 +27,7 @@ export async function POST(request) {
   } catch (error) {
     console.error('Error creating payment intent:', error);
     return NextResponse.json(
-      { error: error.message || 'Internal server error' },
+      { error: 'Payment initialization failed' },
       { status: 500 }
     );
   }

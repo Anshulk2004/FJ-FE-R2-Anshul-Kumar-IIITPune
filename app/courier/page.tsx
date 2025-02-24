@@ -135,7 +135,7 @@ const CourierInterface = () => {
     }
   };
 
-  // Calculate price when locations or service changes
+  
   useEffect(() => {
     if (selectedService && pickup.coordinates && dropoff.coordinates) {
       const service = courierServices.find(s => s.id === selectedService);
@@ -251,7 +251,7 @@ const CourierInterface = () => {
                     )}
                   </div>
 
-                  {/* Package Details */}
+                 
                   <div className="space-y-4">
                     <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : ''}`}>Package Details</h3>
                     <div className="grid grid-cols-2 gap-4">
@@ -271,7 +271,7 @@ const CourierInterface = () => {
                     </div>
                   </div>
 
-                  {/* Sender Details */}
+                  
                   <div className="space-y-4">
                     <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : ''}`}>Sender Details</h3>
                     <div className="grid grid-cols-2 gap-4">
@@ -295,8 +295,7 @@ const CourierInterface = () => {
                       </div>
                     </div>
                   </div>
-
-                  {/* Receiver Details */}
+                 
                   <div className="space-y-4">
                     <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : ''}`}>Receiver Details</h3>
                     <div className="grid grid-cols-2 gap-4">
@@ -320,8 +319,7 @@ const CourierInterface = () => {
                       </div>
                     </div>
                   </div>
-
-                  {/* Delivery Service Selection */}
+                  
                   <div className="space-y-4">
                     <h3 className={`font-semibold ${theme === 'dark' ? 'text-white' : ''}`}>Select Delivery Service</h3>
                     <div className="grid grid-cols-1 gap-4">
@@ -392,7 +390,7 @@ const CourierInterface = () => {
           </Card>
         </div>
 
-        {/* Right Column - Map (2/3) */}
+        
         <div className="w-full md:w-2/3 h-[calc(100vh-6rem)] sticky top-24">
           <div className="h-full rounded-lg overflow-hidden shadow-lg">
             <DynamicMap
@@ -406,8 +404,7 @@ const CourierInterface = () => {
           </div>
         </div>
       </div>
-
-      {/* Directions Dialog */}
+      
       <Dialog open={showDirectionsDialog} onOpenChange={setShowDirectionsDialog}>
         <DialogContent className={`sm:max-w-[500px] ${theme === 'dark' ? 'bg-gray-800 text-white' : ''}`}>
           <DialogHeader>

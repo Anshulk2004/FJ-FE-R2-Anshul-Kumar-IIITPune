@@ -1,4 +1,3 @@
-// components/StripePayment.js
 import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {
@@ -10,24 +9,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CreditCard } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
-const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
+const PaymentForm = ({ amount, onSuccess, onError }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [country, setCountry] = useState('IN'); 
-
-  const safeAmount = typeof amount === 'number' && !isNaN(amount) ? amount : 20;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -36,46 +25,23 @@ const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
       return;
     }
 
-    if (!safeAmount || safeAmount <= 0) {
-      setErrorMessage('Invalid payment amount');
-      onError?.('Invalid payment amount');
-      return;
-    }
-
     setLoading(true);
     setErrorMessage('');
 
     try {
-      console.log('Sending payment intent request:', {
-        amount,
-        rideDetails
-      });
-
       const response = await fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          amount: safeAmount,
-          rideDetails
-        }),
+        body: JSON.stringify({ amount }),
       });
 
-      console.log('Response status:', response.status);
-      const responseText = await response.text();
-      console.log('Raw response:', responseText);
-
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (e) {
-        throw new Error(`Failed to parse response: ${responseText}`);
-      }
-
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create payment intent');
+        throw new Error('Failed to create payment');
       }
+
+      const data = await response.json();
 
       const { error: stripeError, paymentIntent } = await stripe.confirmCardPayment(
         data.clientSecret,
@@ -83,9 +49,8 @@ const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
           payment_method: {
             card: elements.getElement(CardElement),
             billing_details: {
-              name: rideDetails.driver || 'Customer',
               address: {
-                country: country,
+                country: 'IN',
               },
             },
           },
@@ -97,11 +62,12 @@ const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
       }
 
       if (paymentIntent.status === 'succeeded') {
-        onSuccess();
+        onSuccess?.();
       }
     } catch (error) {
+      console.error('Payment error:', error);
       setErrorMessage(error.message);
-      onError(error.message);
+      onError?.(error.message);
     } finally {
       setLoading(false);
     }
@@ -109,47 +75,26 @@ const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="space-y-4">
-        <div>
-          <label className="text-sm font-medium block mb-2">Country</label>
-          <Select 
-            value={country} 
-            onValueChange={setCountry}
-          >
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select country" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="IN">India</SelectItem>
-              <SelectItem value="US">United States</SelectItem>
-              <SelectItem value="GB">United Kingdom</SelectItem>
-              <SelectItem value="AU">Australia</SelectItem>
-              <SelectItem value="CA">Canada</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <label className="text-sm font-medium block mb-2">Card Details</label>
-          <CardElement
-            options={{
-              style: {
-                base: {
-                  fontSize: '16px',
-                  color: '#424770',
-                  '::placeholder': {
-                    color: '#aab7c4',
-                  },
-                },
-                invalid: {
-                  color: '#9e2146',
+      <div>
+        <label className="text-sm font-medium block mb-2">Card Details</label>
+        <CardElement
+          options={{
+            style: {
+              base: {
+                fontSize: '16px',
+                color: '#424770',
+                '::placeholder': {
+                  color: '#aab7c4',
                 },
               },
-              hidePostalCode: true, 
-            }}
-            className="p-3 border rounded-md"
-          />
-        </div>
+              invalid: {
+                color: '#9e2146',
+              },
+            },
+            hidePostalCode: true,
+          }}
+          className="p-3 border rounded-md"
+        />
       </div>
 
       {errorMessage && (
@@ -162,24 +107,23 @@ const PaymentForm = ({ amount, rideDetails, onSuccess, onError }) => {
         className="w-full"
       >
         <CreditCard className="w-4 h-4 mr-2" />
-        {loading ? 'Processing...' : `Pay $${amount.toFixed(2)}`}
+        {loading ? 'Processing...' : `Pay ₹${amount}`}
       </Button>
     </form>
   );
 };
 
-const StripePayment = ({ amount, rideDetails, onSuccess, onError }) => {
-  const safeAmount = typeof amount === 'number' && !isNaN(amount) ? amount : 20;
+const StripePayment = ({ amount, onSuccess, onError }) => {
+  const validAmount = typeof amount === 'number' && amount > 0 ? amount : 0;
   return (
     <Elements stripe={stripePromise}>
-      <Card className="w-full max-w-md mx-auto z-[9999] relative">
+      <Card className="w-full max-w-md mx-auto">
         <CardHeader>
-          <CardTitle>Payment Details</CardTitle>
+          <CardTitle>Card Payment</CardTitle>
         </CardHeader>
         <CardContent>
           <PaymentForm
-            amount={safeAmount}
-            rideDetails={rideDetails}
+            amount={amount}
             onSuccess={onSuccess}
             onError={onError}
           />

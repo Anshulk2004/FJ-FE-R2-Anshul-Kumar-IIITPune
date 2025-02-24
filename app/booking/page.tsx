@@ -9,7 +9,9 @@ import {
   Star, 
   Flag,
   Copy,
-  Coffee
+  Coffee,
+  Moon,
+  Sun
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,27 +32,26 @@ import DynamicMap from '../components/DynamicMap';
 import Image from 'next/image';
 import { useSearchParams } from "next/navigation";
 import PaymentButton from '@/components/PaymentButton';
-import router from 'next/router';
 import Link from 'next/link';
+import { useTheme } from '@/app/components/ThemeContext';
 
 const BookingDetailsPage = () => {
   const searchParams = useSearchParams();
   const [showChatBox, setShowChatBox] = useState(false);
-  const [showFeedbackDialog, setShowFeedbackDialog] = useState(false);
   const [showReportDialog, setShowReportDialog] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const vehicleName = searchParams.get('vehicle');
   const fare = searchParams.get('fare');
   const capacity = searchParams.get('capacity');
   const eta = searchParams.get('eta');
 
-  // Mock booking details - replace with actual data from your backend
   const bookingDetails = {
     vehicle: {
-        name: vehicleName || "Premium Sedan",
-        number: "MH12 AB 1234",
-        image: "/images/rentals.jpg"
-      },
+      name: vehicleName || "Premium Sedan",
+      number: "MH12 AB 1234",
+      image: "/images/rentals.jpg"
+    },
     driver: {
       name: "John Doe",
       rating: 4.8,
@@ -58,10 +59,10 @@ const BookingDetailsPage = () => {
       image: "/images/profile.jpg"
     },
     booking: {
-        otp: "1234",
-        fare: parseInt(fare || "350"),
-        paymentStatus: "pending"
-      },
+      otp: "1234",
+      fare: parseInt(fare || "350"),
+      paymentStatus: "pending"
+    },
   };
 
   const guidelines = [
@@ -87,24 +88,35 @@ const BookingDetailsPage = () => {
 
   const handleCopyOTP = () => {
     navigator.clipboard.writeText(bookingDetails.booking.otp);
-    // You can add a toast notification here
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-6">
+    <div className={`min-h-screen py-6 transition-colors duration-200 ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-gray-100'}`}>
       <div className="container mx-auto px-4">
+        
+        <div className="flex justify-end mb-6">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={toggleTheme}
+            className={`rounded-full ${theme === 'dark' ? 'bg-gray-800 text-yellow-400' : 'bg-white text-gray-800'}`}
+          >
+            {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+          </Button>
+        </div>
+
         <div className="grid grid-cols-12 gap-6">
-          {/* Left Column - Booking Details */}
-          <div className="col-span-12 md:col-span-4 space-y-6">
-            {/* Vehicle and Driver Details Card */}
-            <Card>
+          
+          <div className="col-span-12 lg:col-span-4 space-y-6">
+            
+            <Card className={`${theme === 'dark' ? 'bg-gray-800 border-gray-700' : ''}`}>
               <CardContent className="p-6">
                 <div className="space-y-6">
-                  {/* Vehicle Details */}
+                  
                   <div>
-                    <h2 className="text-2xl font-bold mb-4">Your Ride</h2>
+                    <h2 className={`text-2xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : ''}`}>Your Ride</h2>
                     <div className="flex items-center gap-4">
-                      <div className="w-20 h-20 relative rounded-lg overflow-hidden">
+                      <div className="w-24 h-24 relative rounded-lg overflow-hidden">
                         <Image
                           src={bookingDetails.vehicle.image}
                           alt={bookingDetails.vehicle.name}
@@ -114,13 +126,15 @@ const BookingDetailsPage = () => {
                       </div>
                       <div>
                         <h3 className="font-semibold">{bookingDetails.vehicle.name}</h3>
-                        <p className="text-gray-600">{bookingDetails.vehicle.number}</p>
+                        <p className={`${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {bookingDetails.vehicle.number}
+                        </p>
                       </div>
                     </div>
                   </div>
 
-                  {/* Driver Details */}
-                  <div className="pt-4 border-t">
+             
+                  <div className={`pt-4 border-t ${theme === 'dark' ? 'border-gray-700' : ''}`}>
                     <div className="flex items-center gap-4">
                       <div className="w-16 h-16 relative rounded-full overflow-hidden">
                         <Image
@@ -140,24 +154,31 @@ const BookingDetailsPage = () => {
                     </div>
                   </div>
 
-                  {/* OTP Section */}
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  
+                  <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}`}>
                     <div className="flex justify-between items-center">
                       <div>
-                        <p className="text-sm text-gray-600">Share OTP with driver</p>
+                        <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                          Share OTP with driver
+                        </p>
                         <p className="text-2xl font-bold">{bookingDetails.booking.otp}</p>
                       </div>
-                      <Button variant="ghost" size="icon" onClick={handleCopyOTP}>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={handleCopyOTP}
+                        className={theme === 'dark' ? 'hover:bg-gray-600' : ''}
+                      >
                         <Copy className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
 
-                  {/* Action Buttons */}
-                  <div className="flex gap-2">
+                  
+                  <div className="flex gap-3">
                     <Button 
                       className="flex-1"
-                      variant="outline"
+                      variant={theme === 'dark' ? 'secondary' : 'outline'}
                       onClick={() => window.location.href = `tel:${bookingDetails.driver.phone}`}
                     >
                       <Phone className="w-4 h-4 mr-2" />
@@ -165,7 +186,7 @@ const BookingDetailsPage = () => {
                     </Button>
                     <Button 
                       className="flex-1"
-                      variant="outline"
+                      variant={theme === 'dark' ? 'secondary' : 'outline'}
                       onClick={() => setShowChatBox(true)}
                     >
                       <MessageCircle className="w-4 h-4 mr-2" />
@@ -176,12 +197,12 @@ const BookingDetailsPage = () => {
               </CardContent>
             </Card>
 
-            {/* Guidelines Accordion */}
-            <Card>
+            
+            <Card className={`${theme === 'dark' ? 'bg-gray-800 border-gray-700' : ''}`}>
               <CardContent className="p-6">
                 <Accordion type="single" collapsible>
-                  <AccordionItem value="guidelines">
-                    <AccordionTrigger>
+                  <AccordionItem value="guidelines" className={theme === 'dark' ? 'border-gray-700' : ''}>
+                    <AccordionTrigger className="hover:no-underline">
                       <div className="flex items-center">
                         <Coffee className="w-4 h-4 mr-2" />
                         Ride Guidelines
@@ -191,9 +212,11 @@ const BookingDetailsPage = () => {
                       {guidelines.map((section, index) => (
                         <div key={index} className="mb-4">
                           <h4 className="font-semibold mb-2">{section.title}</h4>
-                          <ul className="list-disc pl-5 space-y-1">
+                          <ul className="list-disc pl-5 space-y-2">
                             {section.items.map((item, i) => (
-                              <li key={i} className="text-sm text-gray-600">{item}</li>
+                              <li key={i} className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                                {item}
+                              </li>
                             ))}
                           </ul>
                         </div>
@@ -204,24 +227,22 @@ const BookingDetailsPage = () => {
               </CardContent>
             </Card>
 
-            {/* Payment Section */}
-            <Card>
+            
+            <Card className={`${theme === 'dark' ? 'bg-gray-800 border-gray-700' : ''}`}>
               <CardContent className="p-6">
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="font-semibold">Payment</h3>
                   <span className="text-xl font-bold">₹{bookingDetails.booking.fare}</span>
                 </div>
-                <PaymentButton
-                //  amount ={350}
-                 ride={bookingDetails} />
+                <PaymentButton ride={bookingDetails} />
               </CardContent>
             </Card>
 
-            {/* Feedback and Report Buttons */}
+            
             <div className="flex gap-4">
               <Link href="/" className="flex-1">
                 <Button 
-                  variant="outline" 
+                  variant={theme === 'dark' ? 'secondary' : 'outline'}
                   className="w-full"
                 >
                   <Star className="w-4 h-4 mr-2" />
@@ -229,7 +250,7 @@ const BookingDetailsPage = () => {
                 </Button>
               </Link>
               <Button 
-                variant="outline" 
+                variant={theme === 'dark' ? 'secondary' : 'outline'}
                 className="flex-1"
                 onClick={() => setShowReportDialog(true)}
               >
@@ -239,41 +260,46 @@ const BookingDetailsPage = () => {
             </div>
           </div>
 
-          {/* Right Column - Map */}
-          <div className="col-span-12 md:col-span-8 h-[700px] rounded-lg overflow-hidden shadow-lg">
-            <DynamicMap
-                          stops={stop}
-                          showVehicle={true} // Add this prop to your DynamicMap component
-                          setDirections={undefined}            />
+        
+          <div className="col-span-12 lg:col-span-8">
+            <Card className={`h-[700px] overflow-hidden ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : ''}`}>
+              <DynamicMap
+                stops={[]}
+                showVehicle={true}
+                setDirections={undefined}
+                theme={theme}
+              />
+            </Card>
           </div>
         </div>
       </div>
 
       
-
-      {/* Chat Dialog */}
       <Dialog open={showChatBox} onOpenChange={setShowChatBox}>
-        <DialogContent className="sm:max-w-[500px] z-[9999]">
+        <DialogContent className={`sm:max-w-[500px] z-[9999] ${theme === 'dark' ? 'bg-gray-800 text-white' : ''}`}>
           <DialogHeader>
             <DialogTitle>Chat with Driver</DialogTitle>
           </DialogHeader>
-          <div className="h-[400px] bg-gray-50 rounded-lg p-4">
-            <p className="text-center text-gray-500">Chat functionality coming soon...</p>
+          <div className={`h-[400px] rounded-lg p-4 ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}`}>
+            <p className={`text-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>
+              Chat functionality coming soon...
+            </p>
           </div>
         </DialogContent>
       </Dialog>
-      
 
-      {/* Report Dialog */}
+     
       <Dialog open={showReportDialog} onOpenChange={setShowReportDialog}>
-        <DialogContent className="sm:max-w-[500px] z-[9999]">
+        <DialogContent className={`sm:max-w-[500px] ${theme === 'dark' ? 'bg-gray-800 text-white' : ''}`}>
           <DialogHeader>
             <DialogTitle>Report an Issue</DialogTitle>
           </DialogHeader>
           <div className="p-4">
             <p>Please describe the issue you're experiencing:</p>
             <textarea 
-              className="w-full mt-2 p-2 border rounded-md" 
+              className={`w-full mt-2 p-2 border rounded-md ${
+                theme === 'dark' ? 'bg-gray-700 border-gray-600 text-white' : ''
+              }`}
               rows={4}
               placeholder="Type your concern here..."
             />

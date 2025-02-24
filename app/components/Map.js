@@ -53,7 +53,7 @@ const RoutingMachine = ({ stops, setDirections }) => {
     const validStops = Array.isArray(stops) ? stops.filter(stop => stop.coordinates && stop.address?.trim()) : [];
 
     if (validStops.length < 2) {
-      setDirections?.([]);
+      setDirections?.(prev => (prev.length === 0 ? prev : [])); // Prevent unnecessary re-renders
       return;
     }
 
@@ -88,7 +88,8 @@ const RoutingMachine = ({ stops, setDirections }) => {
         text: step.text,
         distance: step.distance,
       }));
-      setDirections?.(routeInstructions);
+
+      setDirections?.(prev => (JSON.stringify(prev) === JSON.stringify(routeInstructions) ? prev : routeInstructions)); // Prevent unnecessary re-renders
     });
 
     return () => {
@@ -96,10 +97,11 @@ const RoutingMachine = ({ stops, setDirections }) => {
         map.removeControl(routingControlRef.current);
       }
     };
-  }, [stops, map, setDirections]);
+  }, [stops, map]); // Removed setDirections from dependencies to prevent re-renders
 
   return null;
 };
+
 
 const DynamicMap = ({ stops, setDirections, showVehicle = false, theme}) => {
   const getMarkerColor = (index, total) => {

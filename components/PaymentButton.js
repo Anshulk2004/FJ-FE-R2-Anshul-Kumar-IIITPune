@@ -11,41 +11,19 @@ import {
 } from 'lucide-react';
 import StripePayment from './StripePayment';
 
-const PaymentModal = ({ 
-  onClose, 
-  amount, 
-  rideDetails, 
-  walletBalance = 250, 
-  savedCards = []
-}) => {
+const PaymentModal = ({ onClose, amount, rideDetails }) => {
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [showStripePayment, setShowStripePayment] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const [showSavedCards, setShowSavedCards] = useState(false);
-  const [showAddPayment, setShowAddPayment] = useState(false);
-  const [newPaymentType, setNewPaymentType] = useState(null);
 
-  const safeAmount = typeof amount === 'number' ? amount : 20;
+  const fare = rideDetails?.booking?.fare || amount;
 
   const paymentMethods = [
     {
       id: 'stripe',
       name: 'Credit/Debit Card',
       icon: <StripeIcon className="w-5 h-5" />,
-      description: 'Powered by Stripe'
-    },
-    {
-      id: 'wallet',
-      name: 'RIDE ON Wallet',
-      icon: <Wallet className="w-5 h-5" />,
-      balance: `₹${walletBalance}`,
-      disabled: walletBalance < amount
-    },
-    {
-      id: 'saved_cards',
-      name: 'Saved Cards',
-      icon: <CreditCard className="w-5 h-5" />,
-      description: `${savedCards.length} cards saved`
+      description: 'Pay securely with card'
     },
     {
       id: 'upi',
@@ -72,17 +50,7 @@ const PaymentModal = ({
     
     if (methodId === 'stripe') {
       setShowStripePayment(true);
-    } else if (methodId === 'saved_cards') {
-      setShowSavedCards(true);
-    } else if (methodId === 'add_new') {
-      setShowAddPayment(true);
     }
-  };
-
-  const handleAddPayment = (type) => {
-    setNewPaymentType(type);
-    setShowAddPayment(false);
-    alert(`Adding new ${type.toUpperCase()} payment method`);
   };
 
   const MainMethodSelection = () => (
@@ -93,57 +61,19 @@ const PaymentModal = ({
           <button
             key={method.id}
             onClick={() => handleMethodSelect(method.id)}
-            disabled={method.disabled}
-            className={`w-full p-4 flex items-center justify-between rounded-lg border 
-              ${method.disabled 
-                ? 'bg-gray-50 cursor-not-allowed opacity-60' 
-                : 'hover:bg-gray-50'}`}
+            className="w-full p-4 flex items-center justify-between rounded-lg border hover:bg-gray-50"
           >
             <div className="flex items-center gap-3">
               <div className="text-gray-600">{method.icon}</div>
               <div className="text-left">
                 <p className="font-medium">{method.name}</p>
-                <p className="text-sm text-gray-500">
-                  {method.balance || method.description}
-                </p>
+                <p className="text-sm text-gray-500">{method.description}</p>
               </div>
             </div>
             <ChevronRight className="w-5 h-5 text-gray-400" />
           </button>
         ))}
       </div>
-
-      <div className="border-t pt-4 mt-6">
-        <button
-          onClick={() => handleMethodSelect('add_new')}
-          className="w-full p-4 flex items-center justify-center gap-2 rounded-lg border border-dashed text-blue-600 hover:bg-blue-50"
-        >
-          <Plus className="w-5 h-5" />
-          Add Payment Method
-        </button>
-      </div>
-    </div>
-  );
-
-  const AddPaymentView = () => (
-    <div className="space-y-4">
-      <h2 className="text-xl font-bold mb-4">Add Payment Method</h2>
-      <button 
-        onClick={() => handleAddPayment('UPI')}
-        className="w-full p-4 flex items-center justify-between rounded-lg border hover:bg-gray-50"
-      >
-        <Smartphone className="w-5 h-5 text-gray-600" />
-        <span>Add UPI</span>
-        <ChevronRight className="w-5 h-5 text-gray-400" />
-      </button>
-      <button 
-        onClick={() => handleAddPayment('Credit/Debit Card')}
-        className="w-full p-4 flex items-center justify-between rounded-lg border hover:bg-gray-50"
-      >
-        <CreditCard className="w-5 h-5 text-gray-600" />
-        <span>Add Credit/Debit Card</span>
-        <ChevronRight className="w-5 h-5 text-gray-400" />
-      </button>
     </div>
   );
 
@@ -153,7 +83,7 @@ const PaymentModal = ({
         {paymentSuccess ? (
           <div className="text-center">
             <h2 className="text-lg font-bold text-green-600">Payment Successful!</h2>
-            <p className="text-gray-600">Your transaction was completed.</p>
+            <p className="text-gray-600">Your ride is confirmed.</p>
           </div>
         ) : showStripePayment ? (
           <div>
@@ -163,23 +93,19 @@ const PaymentModal = ({
             >
               ← Back
             </button>
-            <h2 className="text-xl font-bold">Card Payment</h2>
             <StripePayment
-              amount={Number(safeAmount)}
-              rideDetails={rideDetails}
+              amount={fare}
               onSuccess={() => {
                 setPaymentSuccess(true);
                 setTimeout(() => {
                   onClose();
-                }, 3000);
+                }, 2000);
               }}
               onError={(error) => {
                 console.error("Payment failed:", error);
               }}
             />
           </div>
-        ) : showAddPayment ? (
-          <AddPaymentView />
         ) : (
           <MainMethodSelection />
         )}
@@ -199,22 +125,21 @@ const PaymentModal = ({
 
 const PaymentButton = ({ ride }) => {
   const [showPayment, setShowPayment] = useState(false);
-  const fare = typeof ride?.fare === 'number' ? ride.fare : 20;
-
+  const fare = ride?.booking?.fare || 0;
   return (
     <>
       <button
         onClick={() => setShowPayment(true)}
-        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors z-[9999] relative"
+        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
       >
         <CreditCard className="w-4 h-4" />
-        Pay Bill
+        Pay ₹{fare}
       </button>
 
       {showPayment && (
         <PaymentModal
           onClose={() => setShowPayment(false)}
-          amount={Number(fare)}
+          amount={fare}
           rideDetails={ride}
         />
       )}
