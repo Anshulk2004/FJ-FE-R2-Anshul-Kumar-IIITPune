@@ -148,7 +148,7 @@ Feel free to fork, contribute, and submit pull requests to enhance this project.
 ---
 
 ## 📞 Contact
-For any queries, reach out at: **your-email@example.com**
+For any queries, reach out at: **anshulwork0102@gmail.com**
 
 🚀 Happy Coding!
 
