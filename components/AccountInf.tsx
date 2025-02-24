@@ -267,12 +267,12 @@ export default function AccountInfo() {
               <div className="mt-6 grid grid-cols-2 gap-4">
                 <Input
                   value={profileData.email}
-                  className="bg-gray-50"
+                  className={`bg-gray-50 ${theme === "dark" ? "text-white bg-gray-700" : "text-gray-900"}`}
                   readOnly
                 />
                 <Input
                   value={profileData.phone}
-                  className="bg-gray-50"
+                  className={`bg-gray-50 ${theme === "dark" ? "text-white bg-gray-700" : "text-gray-900"}`}
                   readOnly
                 />
               </div>

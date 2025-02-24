@@ -197,9 +197,10 @@ const RideBookingInterface = () => {
       <div className="fixed top-0 left-0 w-full z-[9998]">
         <AuthenticatedNavbar />
       </div>
-      <div className="container mx-auto px-4 pt-24 relative z-0">
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-4 space-y-6">
+      <div className="container mx-auto px-4 pt-24 pb-6 relative z-0">
+        <div className="flex flex-col md:grid md:grid-cols-12 gap-6">
+          
+          <div className="w-full md:col-span-4 space-y-6 order-2 md:order-1">
             <Card
               className={`shadow-lg ${
                 theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white"
@@ -318,7 +319,7 @@ const RideBookingInterface = () => {
                             : "Schedule for later"}
                         </Button>
                       </PopoverTrigger>
-                      <PopoverContent className="w-80">
+                      <PopoverContent className="w-auto sm:w-80">
                         <div className="space-y-2">
                           <Button
                             variant={
@@ -382,7 +383,7 @@ const RideBookingInterface = () => {
                     </Button>
 
                     {directions.length > 0 && (
-                      <>
+                      <div className="flex flex-col sm:flex-row gap-2">
                         <Button
                           className={`w-full h-12 font-semibold rounded-lg ${
                             theme === "dark"
@@ -403,7 +404,7 @@ const RideBookingInterface = () => {
                         >
                           Book Ride
                         </Button>
-                      </>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -411,12 +412,15 @@ const RideBookingInterface = () => {
             </Card>
           </div>
 
-          <div className="md:col-span-8 h-[400px] md:h-[700px] rounded-lg overflow-hidden shadow-lg relative z-0">
-            <DynamicMap
-              stops={stops}
-              setDirections={setDirections}
-              theme={theme}
-            />
+          
+          <div className="w-full md:col-span-8 order-1 md:order-2 mb-6 md:mb-0">
+            <div className="h-[300px] sm:h-[400px] md:h-[700px] rounded-lg overflow-hidden shadow-lg relative z-0">
+              <DynamicMap
+                stops={stops}
+                setDirections={setDirections}
+                theme={theme}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -426,7 +430,7 @@ const RideBookingInterface = () => {
         onOpenChange={setShowDirectionsDialog}
       >
         <DialogContent
-          className={`sm:max-w-[500px] z-[9999] ${
+          className={`sm:max-w-[500px] max-w-[90vw] mx-auto z-[9999] ${
             theme === "dark" ? "bg-gray-800 text-white" : "bg-white"
           }`}
         >
@@ -441,9 +445,9 @@ const RideBookingInterface = () => {
                 </h3>
                 <ol className="list-decimal list-inside space-y-2 px-4">
                   {segment.directions.map((step) => (
-                    <li key={step.id} className="text-gray-700">
+                    <li key={step.id} className={`${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                       {step.text}
-                      <span className="text-sm text-gray-500 ml-2">
+                      <span className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"} ml-2`}>
                         ({Math.round(step.distance)}m)
                       </span>
                     </li>
@@ -456,7 +460,7 @@ const RideBookingInterface = () => {
       </Dialog>
       <Dialog open={showRideOptions} onOpenChange={setShowRideOptions}>
         <DialogContent
-          className={`sm:max-w-[500px] z-[9999] ${
+          className={`sm:max-w-[500px] max-w-[90vw] mx-auto z-[9999] ${
             theme === "dark" ? "bg-gray-800 text-white" : "bg-white"
           }`}
         >

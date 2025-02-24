@@ -59,6 +59,7 @@ const RideSharingInterface = () => {
   const [passengerCount, setPassengerCount] = useState(2);
   const [showNearbyRides, setShowNearbyRides] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [routeSearched, setRouteSearched] = useState(false);
   const router = useRouter();
 
   // Mock nearby rides data
@@ -104,6 +105,9 @@ const RideSharingInterface = () => {
         .map((stop) => fetchCoordinates(stop.address, stop.id));
 
       await Promise.all(searchPromises);
+      
+      // Set routeSearched to true once search is complete
+      setRouteSearched(true);
     } catch (error) {
       console.error("Error during search:", error);
     } finally {
@@ -201,9 +205,9 @@ const RideSharingInterface = () => {
         <AuthenticatedNavbar />
       </div>
 
-      <div className="container mx-auto px-4 pt-24 relative z-0">
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-12 md:col-span-4 space-y-6">
+      <div className="container mx-auto px-4 pt-24 pb-6 relative z-0">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+          <div className="md:col-span-4 space-y-6">
             <Card
               className={`shadow-lg ${
                 theme === "dark" ? "bg-gray-800 border-gray-700" : ""
@@ -390,23 +394,18 @@ const RideSharingInterface = () => {
                     >
                       {isSearching ? "Searching..." : "Search Route"}
                     </Button>
-                    <Button
-                      className={`w-full h-12 font-semibold rounded-lg ${
-                        theme === "dark"
-                          ? "bg-blue-600 hover:bg-blue-700"
-                          : "bg-blue-600 hover:bg-blue-700"
-                      } text-white`}
-                      onClick={() => setShowRideOptions(true)}
-                    >
-                      Book Ride
-                    </Button>
-
-                    {directions.length > 0 && (
+                    
+                    {/* Book Ride button only visible after route is searched */}
+                    {routeSearched && (
                       <Button
-                        className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg"
+                        className={`w-full h-12 font-semibold rounded-lg ${
+                          theme === "dark"
+                            ? "bg-green-600 hover:bg-green-700"
+                            : "bg-green-600 hover:bg-green-700"
+                        } text-white`}
                         onClick={() => setShowRideOptions(true)}
                       >
-                        Find Shared Rides
+                        Book Ride
                       </Button>
                     )}
 
@@ -427,11 +426,11 @@ const RideSharingInterface = () => {
             </Card>
 
             <Alert
-              className={
+              className={`${
                 theme === "dark"
                   ? "bg-green-900/20 border-green-800"
                   : "bg-green-50 border-green-200"
-              }
+              }`}
             >
               <Car
                 className={
@@ -459,21 +458,21 @@ const RideSharingInterface = () => {
             </Alert>
           </div>
 
-          <div className="col-span-12 md:col-span-8 h-[700px] rounded-lg overflow-hidden shadow-lg relative z-0">
+          <div className="md:col-span-8 h-[500px] md:h-[700px] rounded-lg overflow-hidden shadow-lg relative z-0">
             <DynamicMap stops={stops} setDirections={() => {}} theme={theme} />
           </div>
         </div>
       </div>
 
       <Dialog open={showNearbyRides} onOpenChange={setShowNearbyRides}>
-        <DialogContent className="sm:max-w-[600px] z-[9999]">
+        <DialogContent className="sm:max-w-[600px] z-[9999] max-h-[90vh] overflow-y-auto mx-4">
           <DialogHeader>
             <DialogTitle>Nearby Shared Rides</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             {nearbyRides.map((ride) => (
               <Card key={ride.id} className="p-4">
-                <div className="flex justify-between items-start">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4">
                   <div>
                     <h3 className="font-semibold text-lg">{ride.vehicle}</h3>
                     <p className="text-sm text-gray-600">
@@ -484,7 +483,7 @@ const RideSharingInterface = () => {
                       <p className="text-sm">To: {ride.to}</p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-left sm:text-right">
                     <p className="text-lg font-bold text-green-600">
                       ₹{(ride.price / ride.availableSeats).toFixed()} / person
                     </p>
@@ -509,7 +508,7 @@ const RideSharingInterface = () => {
       </Dialog>
 
       <Dialog open={showRideOptions} onOpenChange={setShowRideOptions}>
-        <DialogContent className="sm:max-w-[500px] z-[9999]">
+        <DialogContent className="sm:max-w-[500px] z-[9999] max-h-[90vh] overflow-y-auto mx-4">
           <DialogHeader>
             <DialogTitle>Choose your shared ride</DialogTitle>
           </DialogHeader>
