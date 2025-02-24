@@ -1,4 +1,4 @@
-import AccountInf from "@/app/components/AccountInf";
+import AccountInf from "../../components/AccountInf"
 
 export default function AccountPage() {
   return <AccountInf />;
