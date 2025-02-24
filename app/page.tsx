@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 import Chatbot from "../components/Chatbot";
 import Suggestions from "../components/suggestions";
 import Features from "../components/features";
@@ -8,13 +9,24 @@ import FAQ from "../components/faq";
 import Footer from "../components/footer";
 import AuthenticatedNavbar from "../components/authenticatedNavbar";
 import { useTheme } from "../components/ThemeContext";
+import Navbar from "@/components/navbar";
 
 export default function Home() {
   const { theme } = useTheme();
+  const { data: session, status } = useSession();
+
   return (
     <>
       <div className="relative h-screen">
-        <AuthenticatedNavbar />
+        {status === "loading" ? (
+          <div className="flex justify-center items-center h-screen">
+            <p className="text-center text-white text-xl">Loading...</p>
+          </div>
+        ) : session ? (
+          <AuthenticatedNavbar />
+        ) : (
+          <Navbar />
+        )}
 
         <div className="absolute inset-0 z-0">
           <Image

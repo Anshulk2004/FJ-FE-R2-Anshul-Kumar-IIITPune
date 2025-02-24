@@ -1,0 +1,45 @@
+import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import connectMongoDB from "@/lib/mongodb";
+import User from "@/models/user";
+
+export async function POST(req: Request) {
+    try {
+        const body = await req.json();
+        const { email, password } = body;
+    
+        if (!email || !password) {
+          return NextResponse.json(
+            { error: "Email and password are required" },
+            { status: 400 }
+          );
+        }
+    
+        await connectMongoDB();
+
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+          return NextResponse.json(
+            { error: "User already exists" },
+            { status: 409 }
+          );
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await User.create({
+          email,
+          password: hashedPassword
+        });
+
+        return NextResponse.json(
+            { message: "User registered successfully" },
+            { status: 201 }
+          );
+        } catch (error) {
+          console.error("Signup Error:", error);
+          return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+          );
+        }
+      }
