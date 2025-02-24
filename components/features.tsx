@@ -70,7 +70,7 @@ export default function Features() {
               </motion.button>
               <p className="text-sm mt-2">
                 Don't have an account?{" "}
-                <a href="#" className="text-blue-500 hover:underline">
+                <a href="/signup" className="text-blue-500 hover:underline">
                   Sign up
                 </a>
               </p>
