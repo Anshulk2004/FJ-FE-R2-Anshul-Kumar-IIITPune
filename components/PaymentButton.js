@@ -29,6 +29,12 @@ const PaymentModal = ({
 
   const paymentMethods = [
     {
+      id: 'stripe',
+      name: 'Credit/Debit Card',
+      icon: <StripeIcon className="w-5 h-5" />,
+      description: 'Powered by Stripe'
+    },
+    {
       id: 'wallet',
       name: 'RIDE ON Wallet',
       icon: <Wallet className="w-5 h-5" />,
@@ -52,12 +58,6 @@ const PaymentModal = ({
       name: 'Net Banking',
       icon: <Building className="w-5 h-5" />,
       description: 'All Indian banks'
-    },
-    {
-      id: 'stripe',
-      name: 'Credit/Debit Card',
-      icon: <StripeIcon className="w-5 h-5" />,
-      description: 'Powered by Stripe'
     },
     {
       id: 'cash',
