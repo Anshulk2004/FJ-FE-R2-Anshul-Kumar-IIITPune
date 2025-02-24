@@ -77,13 +77,13 @@ export default function AuthenticatedNavbar() {
           >
             <Link href="/" className="flex items-center gap-3">
               <Image
-                src="/images/LOGO.png"
+                src="/images/logoo.png"
                 alt="Logo"
-                width={40}
-                height={40}
+                width={80}
+                height={200}
                 className="rounded-full"
               />
-              <span className="text-white text-xl font-bold">RideOn</span>
+              {/* <span className="text-white text-xl font-bold">RideOn</span> */}
             </Link>
           </motion.div>
 
