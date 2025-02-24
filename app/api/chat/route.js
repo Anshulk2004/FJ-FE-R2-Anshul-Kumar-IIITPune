@@ -5,7 +5,10 @@ export async function POST(req) {
     const { userMessage } = await req.json();
 
     if (!userMessage) {
-      return NextResponse.json({ error: "Message is required" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Message is required" },
+        { status: 400 }
+      );
     }
 
     const API_KEY = process.env.GEMINI_API_KEY;
@@ -16,7 +19,16 @@ export async function POST(req) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: `This is a ride-sharing app chatbot. Answer user queries related to cab bookings. User: ${userMessage}` }] }],
+        contents: [
+          {
+            role: "user",
+            parts: [
+              {
+                text: `This is a ride-sharing app chatbot. Answer user queries related to cab bookings. User: ${userMessage}`,
+              },
+            ],
+          },
+        ],
         generationConfig: {
           temperature: 0.6,
           maxOutputTokens: 200,
@@ -30,12 +42,16 @@ export async function POST(req) {
     }
 
     const data = await response.json();
-    const botMessage = data.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't find an answer.";
+    const botMessage =
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "I'm sorry, I couldn't find an answer.";
 
     return NextResponse.json({ reply: botMessage });
-
   } catch (error) {
     console.error("Chatbot API Error:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

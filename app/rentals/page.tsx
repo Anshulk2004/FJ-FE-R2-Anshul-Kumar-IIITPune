@@ -535,7 +535,6 @@ const RentalsInterface = () => {
                 </div>
 
                 <div className="space-y-4">
-                  {/* Show total amount */}
                   <div
                     className={`p-4 rounded-lg ${
                       theme === "dark" ? "bg-gray-700" : "bg-gray-100"
@@ -564,7 +563,6 @@ const RentalsInterface = () => {
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Pay Now Button */}
                     <PaymentButton
                       ride={{
                         fare: selectedVehicle
@@ -579,7 +577,6 @@ const RentalsInterface = () => {
                       }}
                     />
 
-                    {/* Pay at End Button */}
                     <Button
                       variant="outline"
                       size="lg"
@@ -590,7 +587,6 @@ const RentalsInterface = () => {
                         alert(
                           "Your ride has been booked with pay at end option!"
                         );
-                        // Add your pay at end handling logic here
                       }}
                     >
                       <div className="flex items-center gap-2">

@@ -8,17 +8,18 @@ import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 const createCustomIcon = (color) => {
   return L.icon({
     iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
-    shadowSize: [41, 41]
+    shadowSize: [41, 41],
   });
 };
 
 const createVehicleIcon = () => {
   return L.divIcon({
-    className: 'custom-div-icon',
+    className: "custom-div-icon",
     html: `
       <div style="
         background: #4CAF50;
@@ -36,7 +37,7 @@ const createVehicleIcon = () => {
       </div>
     `,
     iconSize: [36, 36],
-    iconAnchor: [18, 18]
+    iconAnchor: [18, 18],
   });
 };
 
@@ -50,14 +51,18 @@ const RoutingMachine = ({ stops, setDirections }) => {
       routingControlRef.current = null;
     }
 
-    const validStops = Array.isArray(stops) ? stops.filter(stop => stop.coordinates && stop.address?.trim()) : [];
+    const validStops = Array.isArray(stops)
+      ? stops.filter((stop) => stop.coordinates && stop.address?.trim())
+      : [];
 
     if (validStops.length < 2) {
-      setDirections?.(prev => (prev.length === 0 ? prev : [])); // Prevent unnecessary re-renders
+      setDirections?.((prev) => (prev.length === 0 ? prev : []));
       return;
     }
 
-    const waypoints = validStops.map(stop => L.latLng(stop.coordinates[0], stop.coordinates[1]));
+    const waypoints = validStops.map((stop) =>
+      L.latLng(stop.coordinates[0], stop.coordinates[1])
+    );
 
     const routingControl = L.Routing.control({
       waypoints,
@@ -79,17 +84,21 @@ const RoutingMachine = ({ stops, setDirections }) => {
       map.fitBounds(bounds, { padding: [50, 50] });
     }
 
-    routingControl.on('routesfound', (e) => {
-      const container = document.querySelector('.leaflet-routing-container');
-      if (container) container.style.display = 'none';
-      
+    routingControl.on("routesfound", (e) => {
+      const container = document.querySelector(".leaflet-routing-container");
+      if (container) container.style.display = "none";
+
       const routeInstructions = e.routes[0].instructions.map((step, index) => ({
         id: index + 1,
         text: step.text,
         distance: step.distance,
       }));
 
-      setDirections?.(prev => (JSON.stringify(prev) === JSON.stringify(routeInstructions) ? prev : routeInstructions)); // Prevent unnecessary re-renders
+      setDirections?.((prev) =>
+        JSON.stringify(prev) === JSON.stringify(routeInstructions)
+          ? prev
+          : routeInstructions
+      ); // Prevent unnecessary re-renders
     });
 
     return () => {
@@ -97,27 +106,27 @@ const RoutingMachine = ({ stops, setDirections }) => {
         map.removeControl(routingControlRef.current);
       }
     };
-  }, [stops, map]); // Removed setDirections from dependencies to prevent re-renders
+  }, [stops, map]);
 
   return null;
 };
 
-
-const DynamicMap = ({ stops, setDirections, showVehicle = false, theme}) => {
+const DynamicMap = ({ stops, setDirections, showVehicle = false, theme }) => {
   const getMarkerColor = (index, total) => {
-    if (index === 0) return 'green';
-    if (index === total - 1) return 'red';
-    return 'blue';
+    if (index === 0) return "green";
+    if (index === total - 1) return "red";
+    return "blue";
   };
 
   const defaultCenter = [18.5204, 73.8567];
-  const validStops = Array.isArray(stops) ? stops.filter(stop => stop.coordinates && stop.address?.trim()) : [];
-
+  const validStops = Array.isArray(stops)
+    ? stops.filter((stop) => stop.coordinates && stop.address?.trim())
+    : [];
 
   return (
-    <MapContainer 
+    <MapContainer
       center={defaultCenter}
-      zoom={13} 
+      zoom={13}
       style={{ height: "100%", width: "100%" }}
       className="rounded-lg"
       scrollWheelZoom={true}
@@ -128,30 +137,29 @@ const DynamicMap = ({ stops, setDirections, showVehicle = false, theme}) => {
       />
 
       {validStops.map((stop, index) => (
-        <Marker 
+        <Marker
           key={`${stop.id}-${stop.address}`}
-          position={stop.coordinates} 
+          position={stop.coordinates}
           icon={createCustomIcon(getMarkerColor(index, validStops.length))}
         >
           <Popup>
-            {index === 0 ? "Pickup Location" : 
-             index === validStops.length - 1 ? "Dropoff Location" : 
-             `Stop ${index}`}
+            {index === 0
+              ? "Pickup Location"
+              : index === validStops.length - 1
+              ? "Dropoff Location"
+              : `Stop ${index}`}
           </Popup>
         </Marker>
       ))}
 
       {showVehicle && validStops.length > 0 && (
-        <Marker
-          position={validStops[0].coordinates}
-          icon={createVehicleIcon()}
-        >
+        <Marker position={validStops[0].coordinates} icon={createVehicleIcon()}>
           <Popup>Driver's Location</Popup>
         </Marker>
       )}
 
-<RoutingMachine 
-        stops={stops} 
+      <RoutingMachine
+        stops={stops}
         setDirections={setDirections}
         theme={theme}
       />

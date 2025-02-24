@@ -218,7 +218,6 @@ const RideSharingInterface = () => {
                   Share a ride
                 </h2>
 
-                {/* Passenger Count Selector */}
                 <div className="mb-6">
                   <label
                     className={`block text-sm font-medium mb-2 ${
@@ -252,7 +251,6 @@ const RideSharingInterface = () => {
                   </div>
                 </div>
 
-                {/* Location Inputs */}
                 <div className="space-y-4">
                   {stops.map((stop, index) => (
                     <div key={stop.id} className="relative">
@@ -303,7 +301,6 @@ const RideSharingInterface = () => {
                     </div>
                   ))}
 
-                  {/* Schedule Picker */}
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -379,7 +376,6 @@ const RideSharingInterface = () => {
                     </PopoverContent>
                   </Popover>
 
-                  {/* Action Buttons */}
                   <div className="space-y-3">
                     <Button
                       className={`w-full h-12 font-semibold rounded-lg ${
@@ -430,7 +426,6 @@ const RideSharingInterface = () => {
               </CardContent>
             </Card>
 
-            {/* Savings Alert */}
             <Alert
               className={
                 theme === "dark"
@@ -513,7 +508,6 @@ const RideSharingInterface = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Ride Options Dialog */}
       <Dialog open={showRideOptions} onOpenChange={setShowRideOptions}>
         <DialogContent className="sm:max-w-[500px] z-[9999]">
           <DialogHeader>

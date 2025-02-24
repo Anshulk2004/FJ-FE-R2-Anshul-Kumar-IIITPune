@@ -65,7 +65,9 @@ const RideBookingInterface = () => {
   };
 
   useEffect(() => {
-    const bothAddressesFilled = stops.every(stop => stop.address.trim().length > 0);
+    const bothAddressesFilled = stops.every(
+      (stop) => stop.address.trim().length > 0
+    );
     if (bothAddressesFilled && isSearching) {
       handleSearch();
     }
@@ -112,7 +114,7 @@ const RideBookingInterface = () => {
       address: newAddress,
       coordinates: null,
     };
-    setStops(newStops);    
+    setStops(newStops);
   };
 
   const fetchCoordinates = async (address: string, stopId: string) => {
@@ -249,18 +251,24 @@ const RideBookingInterface = () => {
                             )}
                           </div>
                           <Input
-  type="text"
-  placeholder={index === 0 ? "Enter pickup location" : 
-               index === stops.length - 1 ? "Enter destination" : 
-               "Enter stop location"}
-  className={`pl-10 h-12 ${
-    theme === 'dark' 
-      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-      : 'bg-white border-gray-200 text-gray-900'
-  }`}
-  value={stop.address}
-  onChange={(e) => handleAddressChange(index, e.target.value)}  
-/>
+                            type="text"
+                            placeholder={
+                              index === 0
+                                ? "Enter pickup location"
+                                : index === stops.length - 1
+                                ? "Enter destination"
+                                : "Enter stop location"
+                            }
+                            className={`pl-10 h-12 ${
+                              theme === "dark"
+                                ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                                : "bg-white border-gray-200 text-gray-900"
+                            }`}
+                            value={stop.address}
+                            onChange={(e) =>
+                              handleAddressChange(index, e.target.value)
+                            }
+                          />
                         </div>
                         {index !== 0 && index !== stops.length - 1 && (
                           <Button

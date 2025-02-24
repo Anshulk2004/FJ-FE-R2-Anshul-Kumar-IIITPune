@@ -20,7 +20,6 @@ import Link from "next/link";
 import StripePayment from "@/components/StripePayment";
 import PaymentButton from "@/components/PaymentButton";
 
-
 export default function BookingsPage() {
   const [showAllPastRides, setShowAllPastRides] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -33,9 +32,9 @@ export default function BookingsPage() {
       opacity: 1,
       transition: {
         duration: 0.5,
-        staggerChildren: 0.15
-      }
-    }
+        staggerChildren: 0.15,
+      },
+    },
   };
 
   const itemVariants = {
@@ -43,8 +42,8 @@ export default function BookingsPage() {
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.5 }
-    }
+      transition: { duration: 0.5 },
+    },
   };
 
   const currentRide = {
@@ -128,13 +127,19 @@ export default function BookingsPage() {
     <motion.div
       variants={itemVariants}
       className={`${
-        theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+        theme === "dark"
+          ? "bg-gray-800 border-gray-700"
+          : "bg-white border-gray-200"
       } rounded-xl shadow-sm border p-6 transition-all hover:shadow-md`}
     >
       <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
         <div className="flex-grow">
           <div className="flex flex-wrap items-center gap-3 mb-1">
-            <h4 className={`text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+            <h4
+              className={`text-xl font-semibold ${
+                theme === "dark" ? "text-white" : "text-gray-900"
+              }`}
+            >
               {ride.driver}
             </h4>
             <span
@@ -158,39 +163,81 @@ export default function BookingsPage() {
               {ride.service}
             </span>
           </div>
-          <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} mb-4`}>
+          <p
+            className={`text-sm ${
+              theme === "dark" ? "text-gray-400" : "text-gray-500"
+            } mb-4`}
+          >
             Booking ID: {ride.id}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 mb-6">
             <div className="flex items-center gap-3">
-              <Clock className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
+              <Clock
+                className={`w-5 h-5 ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}
+              />
               <div>
-                <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>
+                <p
+                  className={`text-sm font-medium ${
+                    theme === "dark" ? "text-gray-200" : "text-gray-900"
+                  }`}
+                >
                   {ride.date}
                 </p>
-                <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                <p
+                  className={`text-sm ${
+                    theme === "dark" ? "text-gray-400" : "text-gray-500"
+                  }`}
+                >
                   {ride.time}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Users className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
+              <Users
+                className={`w-5 h-5 ${
+                  theme === "dark" ? "text-gray-400" : "text-gray-500"
+                }`}
+              />
               <div>
-                <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>
+                <p
+                  className={`text-sm font-medium ${
+                    theme === "dark" ? "text-gray-200" : "text-gray-900"
+                  }`}
+                >
                   {ride.passengers} passengers
                 </p>
               </div>
             </div>
             <div className="col-span-1 sm:col-span-2">
               <div className="flex items-center gap-3">
-                <Car className={`w-5 h-5 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} />
+                <Car
+                  className={`w-5 h-5 ${
+                    theme === "dark" ? "text-gray-400" : "text-gray-500"
+                  }`}
+                />
                 <div>
-                  <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>
+                  <p
+                    className={`text-sm font-medium ${
+                      theme === "dark" ? "text-gray-200" : "text-gray-900"
+                    }`}
+                  >
                     {ride.pickup}
                   </p>
-                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>→</p>
-                  <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-200' : 'text-gray-900'}`}>
+                  <p
+                    className={`text-sm ${
+                      theme === "dark" ? "text-gray-400" : "text-gray-500"
+                    }`}
+                  >
+                    →
+                  </p>
+                  <p
+                    className={`text-sm font-medium ${
+                      theme === "dark" ? "text-gray-200" : "text-gray-900"
+                    }`}
+                  >
                     {ride.dropoff}
                   </p>
                 </div>
@@ -199,21 +246,27 @@ export default function BookingsPage() {
           </div>
 
           <div className="flex flex-wrap gap-3">
-            {type === "current" && (
-              <PaymentButton ride={ride} />
-            )}
+            {type === "current" && <PaymentButton ride={ride} />}
             {type === "past" && (
               <>
-                <button className={`flex items-center gap-2 px-4 py-2 ${
-                  theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                } rounded-lg transition-colors`}>
+                <button
+                  className={`flex items-center gap-2 px-4 py-2 ${
+                    theme === "dark"
+                      ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                      : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                  } rounded-lg transition-colors`}
+                >
                   <FileText className="w-4 h-4" />
                   View Transcript
                 </button>
                 <Link href="/feedback">
-                  <button className={`flex items-center gap-2 px-4 py-2 ${
-                    theme === 'dark' ? 'bg-gray-700 text-gray-200 hover:bg-gray-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  } rounded-lg transition-colors`}>
+                  <button
+                    className={`flex items-center gap-2 px-4 py-2 ${
+                      theme === "dark"
+                        ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    } rounded-lg transition-colors`}
+                  >
                     <MessageSquare className="w-4 h-4" />
                     Give Feedback
                   </button>
@@ -229,7 +282,11 @@ export default function BookingsPage() {
             alt={`${ride.service} Vehicle`}
             className="rounded-lg mb-3 object-cover w-full md:w-25 h-20"
           />
-          <div className={`text-2xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+          <div
+            className={`text-2xl font-bold ${
+              theme === "dark" ? "text-white" : "text-gray-900"
+            }`}
+          >
             ${ride.fare.toFixed(2)}
           </div>
         </div>
@@ -238,17 +295,20 @@ export default function BookingsPage() {
   );
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'} p-4 md:p-6 pt-20 transition-colors duration-300`}>
-      {/* Theme Toggle Button */}
+    <div
+      className={`min-h-screen ${
+        theme === "dark" ? "bg-gray-900" : "bg-gray-50"
+      } p-4 md:p-6 pt-20 transition-colors duration-300`}
+    >
       <motion.button
         className={`fixed top-24 right-4 p-2 rounded-full ${
-          theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+          theme === "dark" ? "bg-gray-800" : "bg-white"
         } shadow-lg z-50`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={toggleTheme}
       >
-        {theme === 'dark' ? (
+        {theme === "dark" ? (
           <Sun className="w-6 h-6 text-white" />
         ) : (
           <Moon className="w-6 h-6" />
@@ -261,68 +321,97 @@ export default function BookingsPage() {
         initial="hidden"
         animate="visible"
       >
-        <motion.h1 
+        <motion.h1
           variants={itemVariants}
-          className={`text-4xl font-bold mb-8 ${theme === 'dark' ? 'text-white' : ''}`}
+          className={`text-4xl font-bold mb-8 ${
+            theme === "dark" ? "text-white" : ""
+          }`}
         >
           My Bookings
         </motion.h1>
 
         <div className="space-y-12">
-          {/* Current Ride Section */}
-          <motion.section 
+          <motion.section
             variants={itemVariants}
             className={`${
-              theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              theme === "dark"
+                ? "bg-gray-800 border-gray-700"
+                : "bg-white border-gray-200"
             } rounded-2xl p-4 md:p-8 shadow-sm border transition-colors duration-300`}
           >
-            <h2 className={`text-2xl font-semibold mb-6 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <h2
+              className={`text-2xl font-semibold mb-6 ${
+                theme === "dark" ? "text-white" : ""
+              }`}
+            >
               Current Ride
             </h2>
-            <div className={`${
-              theme === 'dark' ? 'bg-gray-700/50' : 'bg-blue-50/50'
-            } rounded-xl p-1`}>
+            <div
+              className={`${
+                theme === "dark" ? "bg-gray-700/50" : "bg-blue-50/50"
+              } rounded-xl p-1`}
+            >
               {currentRide ? (
                 <RideCard ride={currentRide} type="current" />
               ) : (
-                <p className={`text-gray-600 p-6 ${theme === 'dark' ? 'text-gray-400' : ''}`}>
+                <p
+                  className={`text-gray-600 p-6 ${
+                    theme === "dark" ? "text-gray-400" : ""
+                  }`}
+                >
                   No current rides in progress.
                 </p>
               )}
             </div>
           </motion.section>
 
-          {/* Upcoming Rides Section */}
-          <motion.section 
+          <motion.section
             variants={itemVariants}
             className={`${
-              theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              theme === "dark"
+                ? "bg-gray-800 border-gray-700"
+                : "bg-white border-gray-200"
             } rounded-2xl p-4 md:p-8 shadow-sm border transition-colors duration-300`}
           >
-            <h2 className={`text-2xl font-semibold mb-6 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <h2
+              className={`text-2xl font-semibold mb-6 ${
+                theme === "dark" ? "text-white" : ""
+              }`}
+            >
               Upcoming Rides
             </h2>
-            <div className={`${
-              theme === 'dark' ? 'bg-gray-700/50' : 'bg-green-50/50'
-            } rounded-xl p-1`}>
+            <div
+              className={`${
+                theme === "dark" ? "bg-gray-700/50" : "bg-green-50/50"
+              } rounded-xl p-1`}
+            >
               {upcomingRide ? (
                 <RideCard ride={upcomingRide} type="upcoming" />
               ) : (
-                <p className={`text-gray-600 p-6 ${theme === 'dark' ? 'text-gray-400' : ''}`}>
+                <p
+                  className={`text-gray-600 p-6 ${
+                    theme === "dark" ? "text-gray-400" : ""
+                  }`}
+                >
                   No upcoming rides scheduled.
                 </p>
               )}
             </div>
           </motion.section>
 
-          {/* Past Rides Section */}
-          <motion.section 
+          <motion.section
             variants={itemVariants}
             className={`${
-              theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+              theme === "dark"
+                ? "bg-gray-800 border-gray-700"
+                : "bg-white border-gray-200"
             } rounded-2xl p-4 md:p-8 shadow-sm border transition-colors duration-300`}
           >
-            <h2 className={`text-2xl font-semibold mb-6 ${theme === 'dark' ? 'text-white' : ''}`}>
+            <h2
+              className={`text-2xl font-semibold mb-6 ${
+                theme === "dark" ? "text-white" : ""
+              }`}
+            >
               Past Rides
             </h2>
             <div className="space-y-4">
@@ -339,7 +428,9 @@ export default function BookingsPage() {
                   variants={itemVariants}
                   onClick={() => setShowAllPastRides(!showAllPastRides)}
                   className={`flex items-center gap-2 ${
-                    theme === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-800'
+                    theme === "dark"
+                      ? "text-blue-400 hover:text-blue-300"
+                      : "text-blue-600 hover:text-blue-800"
                   } transition-colors mt-6 font-medium`}
                 >
                   {showAllPastRides ? (

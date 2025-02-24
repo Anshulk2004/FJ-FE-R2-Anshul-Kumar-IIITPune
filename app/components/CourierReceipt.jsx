@@ -24,47 +24,78 @@ const CourierReceipt = ({
       </CardHeader>
       <CardContent>
         <div className="space-y-4 text-gray-700">
-          {/* Service Details */}
           <div>
-            <h3 className="font-semibold text-lg text-blue-600">Service Details</h3>
-            <p className="text-gray-600">{selectedService.name} - {selectedService.description}</p>
-            <p className="text-gray-600">Estimated Time: {selectedService.estimatedTime}</p>
+            <h3 className="font-semibold text-lg text-blue-600">
+              Service Details
+            </h3>
+            <p className="text-gray-600">
+              {selectedService.name} - {selectedService.description}
+            </p>
+            <p className="text-gray-600">
+              Estimated Time: {selectedService.estimatedTime}
+            </p>
           </div>
           <Separator />
-          
-          {/* Locations */}
+
           <div>
-            <h3 className="font-semibold text-lg text-blue-600">Pickup & Drop-off</h3>
-            <p><span className="font-semibold">Pickup:</span> {pickup.fullAddress || pickup.address}</p>
-            <p><span className="font-semibold">Drop-off:</span> {dropoff.fullAddress || dropoff.address}</p>
+            <h3 className="font-semibold text-lg text-blue-600">
+              Pickup & Drop-off
+            </h3>
+            <p>
+              <span className="font-semibold">Pickup:</span>{" "}
+              {pickup.fullAddress || pickup.address}
+            </p>
+            <p>
+              <span className="font-semibold">Drop-off:</span>{" "}
+              {dropoff.fullAddress || dropoff.address}
+            </p>
           </div>
           <Separator />
-          
-          {/* Sender & Receiver Details */}
+
           <div>
-            <h3 className="font-semibold text-lg text-blue-600">Sender & Receiver</h3>
-            <p><span className="font-semibold">Sender:</span> {senderDetails.name} ({senderDetails.phone})</p>
-            <p><span className="font-semibold">Receiver:</span> {receiverDetails.name} ({receiverDetails.phone})</p>
+            <h3 className="font-semibold text-lg text-blue-600">
+              Sender & Receiver
+            </h3>
+            <p>
+              <span className="font-semibold">Sender:</span>{" "}
+              {senderDetails.name} ({senderDetails.phone})
+            </p>
+            <p>
+              <span className="font-semibold">Receiver:</span>{" "}
+              {receiverDetails.name} ({receiverDetails.phone})
+            </p>
           </div>
           <Separator />
-          
-          {/* Package Details */}
+
           <div>
-            <h3 className="font-semibold text-lg text-blue-600">Package Details</h3>
-            <p><span className="font-semibold">Weight:</span> {packageDetails.weight} kg</p>
-            <p><span className="font-semibold">Description:</span> {packageDetails.description}</p>
+            <h3 className="font-semibold text-lg text-blue-600">
+              Package Details
+            </h3>
+            <p>
+              <span className="font-semibold">Weight:</span>{" "}
+              {packageDetails.weight} kg
+            </p>
+            <p>
+              <span className="font-semibold">Description:</span>{" "}
+              {packageDetails.description}
+            </p>
           </div>
           <Separator />
-          
-          {/* Pricing */}
+
           <div className="bg-blue-100 p-4 rounded-md">
-            <h3 className="font-semibold text-lg text-blue-600">Price Summary</h3>
-            <p className="text-gray-700 font-semibold text-xl">Total: ₹{estimatedPrice}</p>
+            <h3 className="font-semibold text-lg text-blue-600">
+              Price Summary
+            </h3>
+            <p className="text-gray-700 font-semibold text-xl">
+              Total: ₹{estimatedPrice}
+            </p>
           </div>
         </div>
-        
+
         <div className="mt-6 flex justify-end">
-          <Button variant="outline" onClick={() => window.print()}>Print Invoice</Button>
+          <Button variant="outline" onClick={() => window.print()}>
+            Print Invoice
+          </Button>
         </div>
       </CardContent>
     </Card>

@@ -1,7 +1,7 @@
-"use client"
+"use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useTheme } from './ThemeContext';
+import { useTheme } from "./ThemeContext";
 
 export default function Suggestions() {
   const { theme } = useTheme();
@@ -9,12 +9,14 @@ export default function Suggestions() {
     {
       image: "/images/rentals.jpg",
       title: "Rentals",
-      description: "Request a trip for a block of time and make multiple stops.",
+      description:
+        "Request a trip for a block of time and make multiple stops.",
     },
     {
       image: "/images/reserve.jpg",
       title: "Reserve",
-      description: "Reserve your ride in advance so you can relax on the day of your trip.",
+      description:
+        "Reserve your ride in advance so you can relax on the day of your trip.",
     },
     {
       image: "/images/ride.jpg",
@@ -24,16 +26,18 @@ export default function Suggestions() {
   ];
 
   return (
-    <div className={`py-10 px-4 md:px-6 
-      ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100'}`}>
+    <div
+      className={`py-10 px-4 md:px-6 
+      ${theme === "dark" ? "bg-gray-900" : "bg-gray-100"}`}
+    >
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         viewport={{ once: false, margin: "-100px" }}
         className={`text-3xl md:text-4xl font-bold text-center mb-10 
-          ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-      
+          ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+      >
         Suggestions
       </motion.h2>
 

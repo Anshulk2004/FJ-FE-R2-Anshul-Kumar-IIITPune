@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { motion } from "framer-motion";
 
 export default function Footer() {
@@ -6,19 +6,18 @@ export default function Footer() {
     { icon: "📘", label: "Facebook" },
     { icon: "🐦", label: "Twitter" },
     { icon: "📸", label: "Instagram" },
-    { icon: "💼", label: "LinkedIn" }
+    { icon: "💼", label: "LinkedIn" },
   ];
 
   const quickLinks = [
     { label: "Careers", href: "#" },
     { label: "About Us", href: "#" },
-    { label: "Organization", href: "#" }
+    { label: "Organization", href: "#" },
   ];
 
   return (
     <footer className="bg-black text-white py-10 px-4 md:px-16">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* Footer sections with adjusted animation durations */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

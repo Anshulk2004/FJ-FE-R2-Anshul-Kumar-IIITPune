@@ -1,4 +1,4 @@
-import AuthenticatedNavbar from '@/app/components/authenticatedNavbar';
+import AuthenticatedNavbar from "@/app/components/authenticatedNavbar";
 
 export default function AuthenticatedLayout({
   children,
@@ -7,10 +7,8 @@ export default function AuthenticatedLayout({
 }) {
   return (
     <div className="min-h-screen bg-gray-50">
-      <AuthenticatedNavbar />      
-      <div className="pt-5">
-        {children}
-      </div>
+      <AuthenticatedNavbar />
+      <div className="pt-5">{children}</div>
     </div>
   );
 }
