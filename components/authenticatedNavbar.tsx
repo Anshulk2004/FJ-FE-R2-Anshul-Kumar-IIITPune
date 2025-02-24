@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "./ThemeContext";
+import { Menu, X } from "lucide-react";
 
 export default function AuthenticatedNavbar() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -52,22 +53,24 @@ export default function AuthenticatedNavbar() {
   return (
     <>
       <AnimatePresence>
-        {showProfileMenu && (
+        {(showProfileMenu || isMobileMenuOpen) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[9997] bg-black/20 backdrop-blur-sm dark:bg-white/10"
-            onClick={() => setShowProfileMenu(false)}
+            onClick={() => {
+              setShowProfileMenu(false);
+              setIsMobileMenuOpen(false);
+            }}
           />
         )}
       </AnimatePresence>
 
       <nav
         className={`fixed top-1 left-1/2 transform -translate-x-1/2 z-[9998] w-[95%] md:w-[85%] lg:w-[80%] 
-      ${
-        theme === "dark" ? "bg-gray-900/50" : "bg-black/50"
-      } backdrop-blur-md rounded-full`}
+        ${theme === "dark" ? "bg-gray-900/50" : "bg-black/50"} 
+        backdrop-blur-md rounded-full`}
       >
         <div className="flex items-center justify-between px-4 py-2">
           <motion.div
@@ -80,13 +83,14 @@ export default function AuthenticatedNavbar() {
                 src="/images/logoo.png"
                 alt="Logo"
                 width={80}
-                height={200}
+                height={80}
                 className="rounded-full"
               />
-              {/* <span className="text-white text-xl font-bold">RideOn</span> */}
+              <span className="text-white text-xl font-bold">RideOn</span>
             </Link>
           </motion.div>
 
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link, index) => (
               <motion.div
@@ -108,7 +112,7 @@ export default function AuthenticatedNavbar() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex items-center gap-5"
+            className="flex items-center gap-3"
           >
             <button
               onClick={toggleTheme}
@@ -116,7 +120,20 @@ export default function AuthenticatedNavbar() {
             >
               {theme === "light" ? "🌙" : "☀️"}
             </button>
-            <div className="relative">
+            
+            {/* Mobile Menu Button */}
+            <button
+              className="md:hidden text-white p-2"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
+            </button>
+
+            <div className="relative hidden md:block">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -154,6 +171,45 @@ export default function AuthenticatedNavbar() {
             </div>
           </motion.div>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden bg-gray-800/95 mt-2 rounded-2xl overflow-hidden"
+            >
+              <div className="px-4 py-2">
+                {navLinks.map((link, index) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="block py-2 text-white hover:text-yellow-400 transition-all font-semibold"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                <div className="border-t border-gray-600 my-2" />
+                {profileMenuItems.map((item, index) => (
+                  <Link
+                    key={index}
+                    href={item.href}
+                    className={`flex items-center gap-3 py-2 text-white hover:text-yellow-400 transition-all ${
+                      item.className ? "text-red-400 hover:text-red-300" : ""
+                    }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <span>{item.icon}</span>
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </>
   );

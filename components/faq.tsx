@@ -44,8 +44,8 @@ export default function FAQ() {
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
         viewport={{ once: false, margin: "-100px" }}
-        className="text-2xl md:text-3xl font-bold text-center text-black mb-6"
-      >
+        className={`text-3xl font-bold text-center ${theme === "dark" ? "text-white" : "text-black"} mb-6`}>
+      
         Frequently Asked Questions
       </motion.h2>
       <div className="space-y-4">
@@ -66,7 +66,7 @@ export default function FAQ() {
               className="flex justify-between items-center w-full text-left"
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
             >
-              <span className="text-lg md:text-xl font-bold text-black">
+              <span className={theme === "dark" ? "text-white" : "text-black"}>
                 {faq.question}
               </span>
               <motion.span
@@ -86,7 +86,7 @@ export default function FAQ() {
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden"
                 >
-                  <p className="text-base md:text-xl text-black pt-2">
+                  <p className={`mt-2 text-base ${theme === "dark" ? "text-white" : "text-black"} leading-relaxed`}>
                     {faq.answer}
                   </p>
                 </motion.div>
