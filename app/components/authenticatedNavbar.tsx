@@ -1,10 +1,10 @@
-"use client"
+"use client";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from './ThemeContext';
+import { useTheme } from "./ThemeContext";
 
 export default function AuthenticatedNavbar() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -21,32 +21,32 @@ export default function AuthenticatedNavbar() {
   ];
 
   const profileMenuItems = [
-    { 
+    {
       label: "Account",
       icon: "👤",
-      href: "/account"
+      href: "/account",
     },
     {
       label: "Bookings",
       icon: "📅",
-      href: "/bookings"
+      href: "/bookings",
     },
     {
       label: "Feedback",
       icon: "💭",
-      href: "/feedback"
+      href: "/feedback",
     },
     {
       label: "Wallet",
       icon: "💳",
-      href: "/wallet"
+      href: "/wallet",
     },
     {
       label: "Sign Out",
       icon: "🚪",
       href: "/logout",
-      className: "text-red-600 border-t border-gray-100"
-    }
+      className: "text-red-600 border-t border-gray-100",
+    },
   ];
 
   return (
@@ -63,8 +63,12 @@ export default function AuthenticatedNavbar() {
         )}
       </AnimatePresence>
 
-      <nav className={`fixed top-1 left-1/2 transform -translate-x-1/2 z-50 w-[95%] md:w-[85%] lg:w-[80%] 
-      ${theme === 'dark' ? 'bg-gray-900/50' : 'bg-black/50'} backdrop-blur-md rounded-full`}>
+      <nav
+        className={`fixed top-1 left-1/2 transform -translate-x-1/2 z-50 w-[95%] md:w-[85%] lg:w-[80%] 
+      ${
+        theme === "dark" ? "bg-gray-900/50" : "bg-black/50"
+      } backdrop-blur-md rounded-full`}
+      >
         <div className="flex items-center justify-between px-4 py-2">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -72,12 +76,17 @@ export default function AuthenticatedNavbar() {
             transition={{ duration: 0.5 }}
           >
             <Link href="/" className="flex items-center gap-3">
-              <Image src="/images/profile.jpg" alt="Logo" width={40} height={40} className="rounded-full" />
+              <Image
+                src="/images/LOGO.png"
+                alt="Logo"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
               <span className="text-white text-xl font-bold">RideOn</span>
             </Link>
           </motion.div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             {navLinks.map((link, index) => (
               <motion.div
@@ -95,18 +104,17 @@ export default function AuthenticatedNavbar() {
             ))}
           </div>
 
-          {/* Profile Section */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             className="flex items-center gap-5"
           >
-            <button 
+            <button
               onClick={toggleTheme}
               className="text-white hover:text-yellow-400 transition-all p-2"
             >
-              {theme === 'light' ? '🌙' : '☀️'}
+              {theme === "light" ? "🌙" : "☀️"}
             </button>
             <div className="relative">
               <motion.button
@@ -131,7 +139,9 @@ export default function AuthenticatedNavbar() {
                       <Link
                         key={index}
                         href={item.href}
-                        className={`flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all ${item.className || ''}`}
+                        className={`flex items-center gap-3 px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all ${
+                          item.className || ""
+                        }`}
                         onClick={() => setShowProfileMenu(false)}
                       >
                         <span>{item.icon}</span>

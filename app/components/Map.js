@@ -101,7 +101,7 @@ const RoutingMachine = ({ stops, setDirections }) => {
   return null;
 };
 
-const DynamicMap = ({ stops, setDirections, showVehicle = false }) => {
+const DynamicMap = ({ stops, setDirections, showVehicle = false, theme}) => {
   const getMarkerColor = (index, total) => {
     if (index === 0) return 'green';
     if (index === total - 1) return 'red';
@@ -148,7 +148,11 @@ const DynamicMap = ({ stops, setDirections, showVehicle = false }) => {
         </Marker>
       )}
 
-      <RoutingMachine stops={stops} setDirections={setDirections} />
+<RoutingMachine 
+        stops={stops} 
+        setDirections={setDirections}
+        theme={theme}
+      />
     </MapContainer>
   );
 };

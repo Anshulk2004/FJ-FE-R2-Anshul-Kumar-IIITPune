@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Chatbot from "./components/Chatbot";
@@ -7,13 +7,12 @@ import Features from "./components/features";
 import FAQ from "./components/faq";
 import Footer from "./components/footer";
 import AuthenticatedNavbar from "./components/authenticatedNavbar";
-import { useTheme } from './components/ThemeContext';
+import { useTheme } from "./components/ThemeContext";
 
 export default function Home() {
   const { theme } = useTheme();
   return (
     <>
-      {/* Hero Section with Background */}
       <div className="relative h-screen">
         <AuthenticatedNavbar />
 
@@ -63,7 +62,7 @@ export default function Home() {
             className="relative w-full max-w-5xl h-60 md:h-[36rem] lg:h-[32rem]"
           >
             <Image
-              src="/images/try.png"
+              src="/images/phone_mockup_3.png"
               alt="Ride Service"
               fill
               className="object-contain"
@@ -72,9 +71,11 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* Rest of the content with white background */}
-      <div className={`relative z-10 min-h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-white'}`}>
-        {/* "Come Ride With Us" Section */}
+      <div
+        className={`relative z-10 min-h-screen ${
+          theme === "dark" ? "bg-gray-900" : "bg-white"
+        }`}
+      >
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -88,16 +89,12 @@ export default function Home() {
             transition={{ duration: 1 }}
             viewport={{ once: false, margin: "-100px" }}
             className={`text-4xl md:text-6xl font-extrabold drop-shadow-xl mb-6 ${
-              theme === 'dark' 
-                ? 'text-yellow-400'
-                : 'text-gray-900' 
+              theme === "dark" ? "text-yellow-400" : "text-gray-900"
             }`}
           >
-            {theme === 'dark' ? (
-              
-              'COME RIDE WITH US'
+            {theme === "dark" ? (
+              "COME RIDE WITH US"
             ) : (
-              
               <>
                 COME <span className="text-yellow-400">RIDE</span> WITH US
               </>
